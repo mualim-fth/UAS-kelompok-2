@@ -1,0 +1,25 @@
+# ========================
+# PENGABAIAN FILE UNGGAHAN 
+# ========================
+# Abaikan semua file gambar/dokumen yang masuk ke folder uploads
+public/uploads/mobil/*
+public/uploads/ktp_sim/*
+
+# Pengecualian: Tetap lacak file .gitkeep agar struktur folder tidak hilang saat di-clone
+!public/uploads/mobil/.gitkeep
+!public/uploads/ktp_sim/.gitkeep
+
+# ==========================================
+# PENGABAIAN FILE SISTEM / LOKAL
+# ==========================================
+# Abaikan file log error dari server
+error_log
+*.log
+
+# Abaikan konfigurasi editor kode 
+.vscode/
+.idea/
+
+# Abaikan file sistem operasi
+.DS_Store
+Thumbs.db

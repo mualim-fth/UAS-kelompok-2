@@ -1,0 +1,134 @@
+/* ============================================================
+   DETAIL.CSS — Halaman Detail Mobil
+   Load setelah base.css
+   ============================================================ */
+
+.detail-wrapper {
+  margin-top: 30px;
+  margin-bottom: 60px;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--white);
+  color: var(--ink-soft);
+  border: 1.5px solid var(--slate-200);
+  margin-bottom: 22px;
+}
+
+.btn-back:hover {
+  background: var(--sky-50);
+  color: var(--sky-600);
+  border-color: var(--sky-200);
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.detail-image-box {
+  background-color: var(--sky-50);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 380px;
+}
+
+.detail-image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.detail-image-placeholder {
+  color: var(--sky-200);
+  text-align: center;
+}
+
+.detail-image-placeholder i {
+  font-size: 4.5rem;
+  margin-bottom: 14px;
+}
+
+.detail-content {
+  padding: 44px;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .detail-content {
+    padding: 30px;
+  }
+}
+
+.detail-title {
+  font-size: 1.9rem;
+  margin-bottom: 6px;
+}
+
+.detail-price {
+  font-size: 1.4rem;
+  color: var(--sky-600);
+  font-weight: 700;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--slate-100);
+}
+
+.detail-price span {
+  font-size: 0.95rem;
+  color: var(--slate-400);
+  font-weight: 400;
+}
+
+.section-title {
+  font-size: 1.05rem;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-title i {
+  color: var(--sky-500);
+}
+
+.spec-list {
+  list-style: none;
+  margin-bottom: 28px;
+}
+
+.spec-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--slate-100);
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.spec-list li span:last-child {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.detail-desc {
+  color: var(--ink-soft);
+  line-height: 1.75;
+  margin-bottom: 28px;
+}

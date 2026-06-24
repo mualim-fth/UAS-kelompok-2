@@ -1,0 +1,2 @@
+# File ini berfungsi untuk memastikan folder utama tetap terlacak oleh Git, 
+# meskipun isi file gambar di dalamnya diabaikan oleh .gitignore

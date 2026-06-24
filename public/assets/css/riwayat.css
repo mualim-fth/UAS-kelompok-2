@@ -1,0 +1,89 @@
+/* ============================================================
+   RIWAYAT.CSS — Halaman Riwayat Booking Customer
+   Load setelah base.css
+   ============================================================ */
+
+.history-header {
+  margin-top: 30px;
+  margin-bottom: 28px;
+}
+
+.history-header h2 {
+  margin-bottom: 6px;
+  font-size: 1.6rem;
+}
+
+.history-header p {
+  color: var(--ink-soft);
+}
+
+.table-wrapper {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+  margin-bottom: 60px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.data-table th,
+.data-table td {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--slate-100);
+}
+
+.data-table th {
+  background-color: var(--sky-50);
+  color: var(--ink-soft);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  letter-spacing: 0.5px;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tbody tr {
+  transition: background-color 0.2s;
+}
+
+.data-table tbody tr:hover {
+  background-color: var(--sky-50);
+}
+
+.car-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.car-info img {
+  width: 60px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* --- Badge Status Khusus Tabel --- */
+.status-badge {
+  padding: 6px 14px;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: inline-block;
+  text-align: center;
+  min-width: 90px;
+}
+
+.status-pending  { background: var(--amber-100); color: var(--amber-600); }
+.status-berjalan { background: var(--sky-100);   color: var(--sky-600); }
+.status-selesai  { background: var(--green-100); color: var(--green-600); }
+.status-batal    { background: var(--red-100);   color: var(--red-600); }
