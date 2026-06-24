@@ -1,4 +1,4 @@
-<?php $css_halaman = 'admin'; include __DIR__ . '/../templates/header.php'; ?>
+<?php include __DIR__ . '/../templates/header.php'; ?>
 
 <div class="container-fluid mt-4">
     <div class="row">
@@ -60,11 +60,11 @@
                                                 </span>
                                             </td>
                                             <td class="text-center">
-                                                <div class="dropdown" tabindex="0">
-                                                    <button class="btn btn-sm btn-secondary" type="button" onclick="this.parentElement.classList.toggle('show')">
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         Ubah Status
                                                     </button>
-                                                    <div class="dropdown-menu">
+                                                    <div class="dropdown-menu dropdown-menu-right">
                                                         <a class="dropdown-menu-item p-2 d-block text-primary" href="<?= BASEURL; ?>/admin/update_status_booking/<?= $booking['id_booking']; ?>/Berjalan">Setujui & Jalankan</a>
                                                         <a class="dropdown-menu-item p-2 d-block text-success" href="<?= BASEURL; ?>/admin/update_status_booking/<?= $booking['id_booking']; ?>/Selesai">Tandai Selesai</a>
                                                         <div class="dropdown-divider"></div>

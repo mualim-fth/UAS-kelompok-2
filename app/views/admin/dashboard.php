@@ -1,4 +1,4 @@
-<?php $css_halaman = 'admin'; include __DIR__ . '/../templates/header.php'; ?>
+<?php include __DIR__ . '/../templates/header.php'; ?>
 
 <div class="container-fluid mt-4">
     <div class="row">
