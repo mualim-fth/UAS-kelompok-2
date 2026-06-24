@@ -1,0 +1,60 @@
+/* ============================================================
+   AUTH.CSS — Halaman Login & Register
+   Load setelah base.css
+   ============================================================ */
+
+.auth-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 200px);
+  padding: 40px 20px;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, var(--sky-50), transparent);
+}
+
+.auth-card {
+  background: var(--white);
+  width: 100%;
+  max-width: 400px;
+  padding: 44px 34px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--slate-200);
+  box-shadow: var(--shadow-md);
+}
+
+.auth-card.register-card {
+  max-width: 480px;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.auth-header h2 {
+  margin-bottom: 6px;
+  font-size: 1.6rem;
+}
+
+.auth-header p {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 26px;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+}
+
+.auth-footer a {
+  color: var(--sky-600);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}

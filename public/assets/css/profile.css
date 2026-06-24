@@ -1,0 +1,56 @@
+/* ============================================================
+   PROFILE.CSS — Halaman Lengkapi Profil & Upload Dokumen
+   Load setelah base.css
+   ============================================================ */
+
+.profile-wrapper {
+  max-width: 800px;
+  margin: 40px auto 60px;
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.profile-header {
+  background: linear-gradient(135deg, var(--sky-500), var(--sky-600));
+  color: var(--white);
+  padding: 34px;
+  text-align: center;
+}
+
+.profile-header h2 {
+  margin-bottom: 8px;
+  color: var(--white);
+  font-size: 1.4rem;
+}
+
+.profile-header p {
+  color: var(--sky-100);
+  font-size: 0.92rem;
+}
+
+.profile-body {
+  padding: 40px 34px;
+}
+
+.file-upload-wrapper {
+  border: 2px dashed var(--slate-200);
+  padding: 26px 20px;
+  text-align: center;
+  border-radius: var(--radius-md);
+  background: var(--sky-50);
+  margin-bottom: 10px;
+  transition: all 0.25s ease;
+}
+
+.file-upload-wrapper:hover {
+  border-color: var(--sky-400);
+  background: var(--sky-100);
+}
+
+.file-upload-wrapper input[type="file"] {
+  display: block;
+  margin: 15px auto 0;
+  max-width: 100%;
+}
