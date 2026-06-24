@@ -13,7 +13,7 @@
                 <div class="car-card">
                     <div class="car-image-wrapper">
                         <?php if (!empty($mobil['foto'])) : ?>
-                            <img src="<?= BASEURL; ?>/uploads/mobil/<?= $mobil['foto']; ?>" class="car-image" alt="<?= htmlspecialchars($mobil['merk'] . ' ' . $mobil['tipe']); ?>">
+                            <img src="/public/uploads/mobil/<?= $mobil['foto']; ?>" class="car-image" alt="<?= htmlspecialchars($mobil['merk'] . ' ' . $mobil['tipe']); ?>">
                         <?php else : ?>
                             <div class="car-image-placeholder">
                                 <i class="fas fa-car"></i>
@@ -36,8 +36,8 @@
                         </ul>
                         
                         <div class="car-actions">
-                            <a href="<?= BASEURL; ?>/car/detail/<?= $mobil['id_mobil']; ?>" class="btn btn-outline">Detail</a>
-                            <a href="<?= BASEURL; ?>/booking/create/<?= $mobil['id_mobil']; ?>" class="btn btn-primary">Sewa Sekarang</a>
+                            <a href="/detail/<?= $mobil['id_mobil']; ?>" class="btn btn-outline">Detail</a>
+                            <a href="/booking/<?= $mobil['id_mobil']; ?>" class="btn btn-primary">Sewa Sekarang</a>
                         </div>
                     </div>
                 </div>
