@@ -111,15 +111,19 @@ textarea:focus-visible {
 }
 
 /* ============================================================
-   NAVBAR
+   NAVBAR (Tampilan Premium & Profesional)
    ============================================================ */
 .navbar {
-  background-color: var(--white);
-  padding: 16px 0;
-  border-bottom: 1px solid var(--slate-200);
+  background-color: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
   position: sticky;
   top: 0;
   z-index: 50;
+  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.04);
+  transition: all 0.3s ease;
 }
 
 .navbar .container {
@@ -128,44 +132,104 @@ textarea:focus-visible {
   align-items: center;
 }
 
+/* --- Area Logo --- */
 .navbar-brand {
   font-family: var(--font-display);
-  font-size: 1.35rem;
+  font-size: 1.45rem;
   font-weight: 800;
   color: var(--ink);
   text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  letter-spacing: -0.5px;
 }
 
 .navbar-brand i {
-  color: var(--sky-500);
-  background: var(--sky-100);
-  padding: 8px;
-  border-radius: 10px;
-  font-size: 1rem;
+  color: var(--white);
+  background: linear-gradient(135deg, var(--sky-500), var(--sky-700));
+  padding: 10px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.25);
+  transition: transform 0.3s ease;
 }
 
+.navbar-brand:hover i {
+  transform: rotate(-10deg) scale(1.05);
+}
+
+/* --- Area Menu Navigasi --- */
 .nav-menu {
   list-style: none;
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 34px;
 }
 
 .nav-menu a {
   color: var(--ink-soft);
   text-decoration: none;
   font-weight: 600;
-  font-size: 0.95rem;
-  transition: color 0.2s;
+  font-size: 0.98rem;
+  transition: color 0.2s ease;
+  position: relative;
 }
 
 .nav-menu a:hover {
   color: var(--sky-600);
 }
 
+/* --- Efek Garis Bawah Animasi (Hanya untuk teks biasa, bukan tombol) --- */
+.nav-menu a:not(.btn):not(.nav-link-login)::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2.5px;
+  bottom: -6px;
+  left: 0;
+  background-color: var(--sky-500);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.nav-menu a:not(.btn):not(.nav-link-login):hover::after {
+  width: 100%;
+}
+
+/* --- Styling Khusus Tombol di Navbar --- */
+.nav-link-login {
+  color: var(--ink) !important;
+  font-weight: 700 !important;
+}
+
+.nav-link-login:hover {
+  color: var(--sky-600) !important;
+}
+
+.nav-menu .btn {
+  padding: 10px 24px;
+  box-shadow: none;
+}
+
+.nav-menu .btn-primary {
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
+}
+
+.nav-menu .btn-primary:hover {
+  box-shadow: 0 6px 16px rgba(14, 165, 233, 0.35);
+}
+
+.nav-menu .btn-nav-logout {
+  background-color: var(--red-100);
+  color: var(--red-600);
+}
+
+.nav-menu .btn-nav-logout:hover {
+  background-color: var(--red-600);
+  color: var(--white);
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3);
+}
 /* ============================================================
    TOMBOL (dipakai di semua halaman)
    ============================================================ */
@@ -303,4 +367,29 @@ footer {
 .empty-state h3 {
   color: var(--ink);
   margin-bottom: 8px;
+}
+
+/* ============================================================
+   PERBAIKAN ANTI-GESER (LAYOUT STABILIZER)
+   ============================================================ */
+
+html {
+  overflow-y: scroll; 
+}
+
+.navbar {
+  min-height: 76px;
+}
+
+.nav-menu .btn:hover {
+  transform: none !important;
+}
+
+.nav-menu .btn:active {
+  transform: scale(0.97) !important; 
+  outline: none;
+}
+
+.nav-menu a:focus:not(:focus-visible) {
+  outline: none;
 }

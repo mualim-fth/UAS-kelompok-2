@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= isset($data['judul']) ? $data['judul'] : 'Sistem Rental Mobil'; ?></title>
     
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
-    <link rel="stylesheet" href="/public/assets/css/base.css">
+    <!-- Base CSS (Dengan Cache Buster) -->
+    <link rel="stylesheet" href="/public/assets/css/base.css?v=<?= time(); ?>">
     
-<?php if (isset($css_halaman)) : ?>
+    <!-- CSS Spesifik Halaman (Dinamis) -->
+    <?php if (isset($css_halaman)) : ?>
         <link rel="stylesheet" href="/public/assets/css/<?= $css_halaman; ?>.css?v=<?= time(); ?>">
     <?php endif; ?>
 </head>
@@ -34,12 +37,12 @@
                 <?php endif; ?>
                 
                 <li>
-                    <a href="/logout" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin keluar?');">
+                    <a href="/logout" class="btn btn-danger btn-nav-logout" onclick="return confirm('Apakah Anda yakin ingin keluar?');">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </a>
                 </li>
             <?php else : ?>
-                <li><a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                <li><a href="/login" class="nav-link-login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
                 <li><a href="/register" class="btn btn-primary">Daftar</a></li>
             <?php endif; ?>
         </ul>
