@@ -1,14 +1,14 @@
 <?php $css_halaman = 'detail'; include __DIR__ . '/../templates/header.php'; ?>
 
 <section class="container detail-wrapper">
-    <a href="<?= BASEURL; ?>/car" class="btn btn-back">
+    <a href="/car" class="btn btn-back">
         <i class="fas fa-arrow-left"></i> Kembali ke Katalog
     </a>
 
     <div class="detail-grid">
         <div class="detail-image-box">
             <?php if (!empty($data['mobil']['foto'])) : ?>
-                <img src="<?= BASEURL; ?>/uploads/mobil/<?= $data['mobil']['foto']; ?>" alt="<?= htmlspecialchars($data['mobil']['merk'] . ' ' . $data['mobil']['tipe']); ?>">
+                <img src="/public/uploads/mobil/<?= $data['mobil']['foto']; ?>" alt="<?= htmlspecialchars($data['mobil']['merk'] . ' ' . $data['mobil']['tipe']); ?>">
             <?php else : ?>
                 <div class="detail-image-placeholder">
                     <i class="fas fa-image"></i>
@@ -52,7 +52,7 @@
             </div>
 
             <?php if ($data['mobil']['status'] == 'Tersedia'): ?>
-                <a href="<?= BASEURL; ?>/booking/create/<?= $data['mobil']['id_mobil']; ?>" class="btn btn-primary btn-block">
+                <a href="/booking/<?= $data['mobil']['id_mobil']; ?>" class="btn btn-primary btn-block">
                     <i class="fas fa-calendar-check" style="margin-right: 8px;"></i> Pesan Kendaraan Ini
                 </a>
             <?php else: ?>
