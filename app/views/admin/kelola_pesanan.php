@@ -1,12 +1,12 @@
-<?php include __DIR__ . '/../templates/header.php'; ?>
+<?php $css_halaman = 'admin'; include __DIR__ . '/../templates/header.php'; ?>
 
 <div class="container-fluid mt-4">
     <div class="row">
         <div class="col-md-3 mb-4">
             <div class="list-group shadow-sm">
-                <a href="<?= BASEURL; ?>/admin/dashboard" class="list-group-item list-group-item-action">Dashboard</a>
-                <a href="<?= BASEURL; ?>/admin/kelola_mobil" class="list-group-item list-group-item-action">Kelola Mobil</a>
-                <a href="<?= BASEURL; ?>/admin/kelola_pesanan" class="list-group-item list-group-item-action active">Kelola Pesanan</a>
+                <a href="/dashboard" class="list-group-item list-group-item-action">Dashboard</a>
+                <a href="/kelola_mobil" class="list-group-item list-group-item-action">Kelola Mobil</a>
+                <a href="/kelola_pesanan" class="list-group-item list-group-item-action active">Kelola Pesanan</a>
             </div>
         </div>
 
@@ -60,15 +60,15 @@
                                                 </span>
                                             </td>
                                             <td class="text-center">
-                                                <div class="dropdown">
-                                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <div class="dropdown" tabindex="0">
+                                                    <button class="btn btn-sm btn-secondary" type="button" onclick="this.parentElement.classList.toggle('show')">
                                                         Ubah Status
                                                     </button>
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        <a class="dropdown-menu-item p-2 d-block text-primary" href="<?= BASEURL; ?>/admin/update_status_booking/<?= $booking['id_booking']; ?>/Berjalan">Setujui & Jalankan</a>
-                                                        <a class="dropdown-menu-item p-2 d-block text-success" href="<?= BASEURL; ?>/admin/update_status_booking/<?= $booking['id_booking']; ?>/Selesai">Tandai Selesai</a>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-menu-item p-2 d-block text-primary" href="/update_status_booking/<?= $booking['id_booking']; ?>/Berjalan">Setujui & Jalankan</a>
+                                                        <a class="dropdown-menu-item p-2 d-block text-success" href="/update_status_booking/<?= $booking['id_booking']; ?>/Selesai">Tandai Selesai</a>
                                                         <div class="dropdown-divider"></div>
-                                                        <a class="dropdown-menu-item p-2 d-block text-danger" href="<?= BASEURL; ?>/admin/update_status_booking/<?= $booking['id_booking']; ?>/Dibatalkan" onclick="return confirm('Batalkan pesanan ini?');">Tolak / Batalkan</a>
+                                                        <a class="dropdown-menu-item p-2 d-block text-danger" href="/update_status_booking/<?= $booking['id_booking']; ?>/Dibatalkan" onclick="return confirm('Batalkan pesanan ini?');">Tolak / Batalkan</a>
                                                     </div>
                                                 </div>
                                             </td>

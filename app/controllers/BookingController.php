@@ -1,6 +1,7 @@
 <?php
 
-class BookingController extends Controller
+// Tidak ada lagi "extends Controller"
+class BookingController
 {
     // =================================================================
     // MIDDLEWARE KEAMANAN
@@ -9,7 +10,7 @@ class BookingController extends Controller
     {
         // Pastikan tamu/pengunjung biasa tidak bisa mengakses fitur booking
         if (!isset($_SESSION['user_id'])) {
-            header('Location: ' . BASEURL . '/auth');
+            header('Location: /login');
             exit;
         }
     }
@@ -17,21 +18,30 @@ class BookingController extends Controller
     // =================================================================
     // MENAMPILKAN FORM BOOKING (Mencegat user jika profil kosong)
     // =================================================================
-    public function create($id_mobil)
+    public function create($id_mobil = null)
     {
-        // 1. CEK KELENGKAPAN PROFIL (Pencegatan)
-        $user = $this->model('UserModel')->getById($_SESSION['user_id']);
-        
-        if (empty($user['nomor_hp']) || empty($user['alamat']) || empty($user['foto_ktp']) || empty($user['foto_sim'])) {
-            // Paksa pengguna melengkapi profil sebelum merender halaman booking
-            echo "<script>alert('Akses Tertahan! Anda wajib melengkapi data alamat, KTP, dan SIM sebelum bisa menyewa armada.'); window.location.href='".BASEURL."/profile';</script>";
+        if ($id_mobil === null) {
+            header('Location: /car');
             exit;
         }
 
-        // 2. CEK KETERSEDIAAN MOBIL
-        $mobil = $this->model('CarModel')->getById($id_mobil);
+        // 1. CEK KELENGKAPAN PROFIL (Panggil UserModel secara manual)
+        require_once __DIR__ . '/../models/UserModel.php';
+        $userModel = new UserModel();
+        $user = $userModel->getById($_SESSION['user_id']);
+        
+        if (empty($user['nomor_hp']) || empty($user['alamat']) || empty($user['foto_ktp']) || empty($user['foto_sim'])) {
+            echo "<script>alert('Akses Tertahan! Anda wajib melengkapi data alamat, KTP, dan SIM sebelum bisa menyewa armada.'); window.location.href='/profile';</script>";
+            exit;
+        }
+
+        // 2. CEK KETERSEDIAAN MOBIL (Panggil CarModel secara manual)
+        require_once __DIR__ . '/../models/CarModel.php';
+        $carModel = new CarModel();
+        $mobil = $carModel->getById($id_mobil);
+
         if (!$mobil || $mobil['status'] !== 'Tersedia') {
-            echo "<script>alert('Mohon maaf, armada ini sedang tidak tersedia atau dalam perawatan.'); window.location.href='".BASEURL."/car';</script>";
+            echo "<script>alert('Mohon maaf, armada ini sedang tidak tersedia atau dalam perawatan.'); window.location.href='/car';</script>";
             exit;
         }
 
@@ -39,8 +49,8 @@ class BookingController extends Controller
         $data['mobil'] = $mobil;
         $data['user']  = $user;
 
-        // Render form kalender sewa
-        $this->view('customer/form_booking', $data);
+        // Render form kalender sewa langsung dengan include
+        include __DIR__ . '/../views/customer/form_booking.php';
     }
 
     // =================================================================
@@ -51,10 +61,10 @@ class BookingController extends Controller
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $id_mobil = $_POST['id_mobil'];
             
-            // KEAMANAN TINGKAT TINGGI:
-            // Ambil harga_per_hari langsung dari database, BUKAN dari form HTML.
-            // Ini mencegah pelanggan nakal yang menggunakan "Inspect Element" untuk mengubah harga sewa menjadi Rp 0.
-            $mobil = $this->model('CarModel')->getById($id_mobil);
+            // Panggil CarModel untuk mendapatkan harga valid dari DB
+            require_once __DIR__ . '/../models/CarModel.php';
+            $carModel = new CarModel();
+            $mobil = $carModel->getById($id_mobil);
             
             $dataBooking = [
                 'id_user'          => $_SESSION['user_id'],
@@ -66,7 +76,7 @@ class BookingController extends Controller
                 'harga_per_hari'   => $mobil['harga_per_hari'] 
             ];
 
-            // Validasi Logika Kalender (Tanggal tidak boleh mundur)
+            // Validasi Logika Kalender
             $waktuAmbil   = strtotime($dataBooking['tanggal_ambil']);
             $waktuKembali = strtotime($dataBooking['tanggal_kembali']);
             
@@ -75,14 +85,16 @@ class BookingController extends Controller
                 exit;
             }
 
-            // Eksekusi insert ke database
-            $id_booking = $this->model('BookingModel')->create($dataBooking);
+            // Eksekusi insert ke database dengan BookingModel
+            require_once __DIR__ . '/../models/BookingModel.php';
+            $bookingModel = new BookingModel();
+            $id_booking = $bookingModel->create($dataBooking);
 
             if ($id_booking) {
-                // Ubah status mobil menjadi 'Disewa' agar otomatis hilang dari katalog pengunjung lain
-                $this->model('CarModel')->updateStatus($id_mobil, 'Disewa');
+                // Ubah status mobil menjadi 'Disewa'
+                $carModel->updateStatus($id_mobil, 'Disewa');
                 
-                echo "<script>alert('Transaksi berhasil dikirim! Silakan pantau status pesanan Anda.'); window.location.href='".BASEURL."/booking/riwayat';</script>";
+                echo "<script>alert('Transaksi berhasil dikirim! Silakan pantau status pesanan Anda.'); window.location.href='/riwayat';</script>";
             } else {
                 echo "<script>alert('Sistem gagal memproses pesanan Anda.'); window.history.back();</script>";
             }
@@ -97,9 +109,60 @@ class BookingController extends Controller
     {
         $data['judul'] = 'Riwayat Pesanan Saya - ' . APP_NAME;
         
-        // Ambil data pesanan khusus untuk user yang sedang login saja
-        $data['bookings'] = $this->model('BookingModel')->getByUser($_SESSION['user_id']);
+        require_once __DIR__ . '/../models/BookingModel.php';
+        $bookingModel = new BookingModel();
+        $data['bookings'] = $bookingModel->getByUser($_SESSION['user_id']);
         
-        $this->view('customer/riwayat_booking', $data);
+        include __DIR__ . '/../views/customer/riwayat_booking.php';
+    }
+
+    // =================================================================
+    // AREA ADMIN: MANAJEMEN PESANAN (Fungsi Tambahan Baru)
+    // =================================================================
+    public function kelola()
+    {
+        // Proteksi khusus Admin
+        if ($_SESSION['role'] !== 'admin') {
+            header('Location: /login');
+            exit;
+        }
+
+        $data['judul'] = 'Kelola Pesanan - Admin';
+        
+        require_once __DIR__ . '/../models/BookingModel.php';
+        $bookingModel = new BookingModel();
+        $data['bookings'] = $bookingModel->getAll();
+
+        include __DIR__ . '/../views/admin/kelola_pesanan.php';
+    }
+
+    public function updateStatus($id, $status_baru)
+    {
+        // Proteksi khusus Admin
+        if ($_SESSION['role'] !== 'admin') {
+            header('Location: /login');
+            exit;
+        }
+
+        require_once __DIR__ . '/../models/BookingModel.php';
+        $bookingModel = new BookingModel();
+        
+        if ($bookingModel->updateStatus($id, $status_baru)) {
+            
+            // Jika pesanan ditandai "Selesai" atau "Dibatalkan", mobil harus kembali "Tersedia"
+            if ($status_baru == 'Selesai' || $status_baru == 'Dibatalkan') {
+                $booking = $bookingModel->getById($id);
+                if ($booking) {
+                    require_once __DIR__ . '/../models/CarModel.php';
+                    $carModel = new CarModel();
+                    $carModel->updateStatus($booking['id_mobil'], 'Tersedia');
+                }
+            }
+
+            echo "<script>alert('Status pesanan berhasil diperbarui menjadi {$status_baru}!'); window.location.href='/kelola_pesanan';</script>";
+        } else {
+            echo "<script>alert('Gagal memperbarui status pesanan.'); window.location.href='/kelola_pesanan';</script>";
+        }
+        exit;
     }
 }

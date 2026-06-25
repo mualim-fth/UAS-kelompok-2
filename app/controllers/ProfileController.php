@@ -1,6 +1,7 @@
 <?php
 
-class ProfileController extends Controller
+// Tidak ada lagi "extends Controller"
+class ProfileController 
 {
     // =================================================================
     // MIDDLEWARE / PROTEKSI CONSTRUCTOR
@@ -9,7 +10,7 @@ class ProfileController extends Controller
     {
         // Pastikan hanya user yang sudah login yang bisa mengakses controller ini
         if (!isset($_SESSION['user_id'])) {
-            header('Location: ' . BASEURL . '/auth');
+            header('Location: /login');
             exit;
         }
     }
@@ -21,13 +22,18 @@ class ProfileController extends Controller
     {
         $data['judul'] = 'Profil Saya - ' . APP_NAME;
         
-        // Ambil data user yang sedang login dari database
-        $data['user'] = $this->model('UserModel')->getById($_SESSION['user_id']);
+        // Ambil data user yang sedang login dari database menggunakan pemanggilan manual
+        require_once __DIR__ . '/../models/UserModel.php';
+        $userModel = new UserModel();
+        $data['user'] = $userModel->getById($_SESSION['user_id']);
 
-        // Arahkan ke view form lengkapi profil
-        $this->view('customer/lengkapi_profil', $data);
+        // Arahkan ke view form lengkapi profil menggunakan include
+        include __DIR__ . '/../views/customer/lengkapi_profil.php';
     }
 
+    // =================================================================
+    // PROSES UPLOAD KTP & SIM (INTI MANAJEMEN FILE)
+    // =================================================================
     // =================================================================
     // PROSES UPLOAD KTP & SIM (INTI MANAJEMEN FILE)
     // =================================================================
@@ -39,22 +45,39 @@ class ProfileController extends Controller
             $pesanSukses = [];
             $pesanError = [];
 
-            // 1. BLOK PEMROSESAN FOTO KTP
+            // Panggil UserModel untuk persiapan update data
+            require_once __DIR__ . '/../models/UserModel.php';
+            $userModel = new UserModel();
+
+            // =========================================================
+            // 1. BLOK BARU: SIMPAN DATA TEKS (NO HP & ALAMAT)
+            // =========================================================
+            // Karena 'nama_lengkap' tidak dikirim oleh form HTML, 
+            // kita suntikkan datanya dari Session agar UserModel tidak error.
+            $_POST['nama_lengkap'] = $_SESSION['nama_lengkap'];
+            
+            if ($userModel->update($userId, $_POST)) {
+                $pesanSukses[] = "Data alamat dan nomor HP tersimpan.";
+            } else {
+                $pesanError[] = "Gagal menyimpan data teks.";
+            }
+
+            // =========================================================
+            // 2. BLOK PEMROSESAN FOTO KTP
+            // =========================================================
             if (isset($_FILES['foto_ktp']) && $_FILES['foto_ktp']['error'] === UPLOAD_ERR_OK) {
                 
                 $tipeMimeKtp = $_FILES['foto_ktp']['type'];
                 $ukuranKtp   = $_FILES['foto_ktp']['size'];
                 $tmpKtp      = $_FILES['foto_ktp']['tmp_name'];
 
-                // Validasi Tipe & Ukuran (Memanfaatkan konstanta dari config.php)
                 if (in_array($tipeMimeKtp, UPLOAD_ALLOWED_TYPES) && $ukuranKtp <= UPLOAD_MAX_SIZE) {
                     
                     $ekstensiKtp = pathinfo($_FILES['foto_ktp']['name'], PATHINFO_EXTENSION);
-                    $namaFileKtp = uniqid('ktp_') . '.' . $ekstensiKtp; // Generate nama aman
+                    $namaFileKtp = uniqid('ktp_') . '.' . $ekstensiKtp;
 
-                    // Pindahkan file dan update database
                     if (move_uploaded_file($tmpKtp, UPLOAD_KTP_SIM . $namaFileKtp)) {
-                        $this->model('UserModel')->updateFotoKtp($userId, $namaFileKtp);
+                        $userModel->updateFotoKtp($userId, $namaFileKtp);
                         $pesanSukses[] = "Foto KTP berhasil diunggah.";
                     } else {
                         $pesanError[] = "Gagal memindahkan file KTP ke server.";
@@ -64,7 +87,9 @@ class ProfileController extends Controller
                 }
             }
 
-            // 2. BLOK PEMROSESAN FOTO SIM
+            // =========================================================
+            // 3. BLOK PEMROSESAN FOTO SIM
+            // =========================================================
             if (isset($_FILES['foto_sim']) && $_FILES['foto_sim']['error'] === UPLOAD_ERR_OK) {
                 
                 $tipeMimeSim = $_FILES['foto_sim']['type'];
@@ -77,7 +102,7 @@ class ProfileController extends Controller
                     $namaFileSim = uniqid('sim_') . '.' . $ekstensiSim;
 
                     if (move_uploaded_file($tmpSim, UPLOAD_KTP_SIM . $namaFileSim)) {
-                        $this->model('UserModel')->updateFotoSim($userId, $namaFileSim);
+                        $userModel->updateFotoSim($userId, $namaFileSim);
                         $pesanSukses[] = "Foto SIM berhasil diunggah.";
                     } else {
                         $pesanError[] = "Gagal memindahkan file SIM ke server.";
@@ -87,8 +112,9 @@ class ProfileController extends Controller
                 }
             }
 
-            // 3. LOGIKA NOTIFIKASI PENGGUNA
-            // Menggabungkan pesan array menjadi satu string agar mudah ditampilkan di alert JavaScript
+            // =========================================================
+            // 4. LOGIKA NOTIFIKASI PENGGUNA
+            // =========================================================
             $alertMsg = "";
             if (!empty($pesanSukses)) {
                 $alertMsg .= implode("\\n", $pesanSukses) . "\\n";
@@ -97,13 +123,8 @@ class ProfileController extends Controller
                 $alertMsg .= implode("\\n", $pesanError);
             }
 
-            // Jika tidak ada pesan sama sekali (user menekan tombol submit tapi tidak memilih file)
-            if (empty($alertMsg)) {
-                $alertMsg = "Tidak ada file dokumen yang dipilih.";
-            }
-
-            // Pantulkan kembali ke halaman profil dengan membawa pesan alert
-            echo "<script>alert('$alertMsg'); window.location.href='".BASEURL."/profile';</script>";
+            // Pantulkan kembali ke halaman profil
+            echo "<script>alert('$alertMsg'); window.location.href='/profile';</script>";
             exit;
         }
     }

@@ -1,19 +1,19 @@
-<?php include __DIR__ . '/../templates/header.php'; ?>
+<?php $css_halaman = 'admin'; include __DIR__ . '/../templates/header.php'; ?>
 
 <div class="container-fluid mt-4">
     <div class="row">
         <div class="col-md-3 mb-4">
             <div class="list-group shadow-sm">
-                <a href="<?= BASEURL; ?>/admin/dashboard" class="list-group-item list-group-item-action">Dashboard</a>
-                <a href="<?= BASEURL; ?>/admin/kelola_mobil" class="list-group-item list-group-item-action active">Kelola Mobil</a>
-                <a href="<?= BASEURL; ?>/admin/kelola_pesanan" class="list-group-item list-group-item-action">Kelola Pesanan</a>
+                <a href="/dashboard" class="list-group-item list-group-item-action">Dashboard</a>
+                <a href="/kelola_mobil" class="list-group-item list-group-item-action active">Kelola Mobil</a>
+                <a href="/kelola_pesanan" class="list-group-item list-group-item-action">Kelola Pesanan</a>
             </div>
         </div>
 
         <div class="col-md-9">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Kelola Data Mobil</h1>
-                <button type="button" class="btn btn-primary shadow-sm" data-toggle="modal" data-target="#modalTambahMobil">
+                <button type="button" class="btn btn-primary shadow-sm" onclick="document.getElementById('modalTambahMobil').classList.add('show')">
                     <i class="fas fa-plus"></i> Tambah Mobil Baru
                 </button>
             </div>
@@ -33,7 +33,7 @@
                                     <th>Status</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
-                            </table>
+                            </thead>
                             <tbody>
                                 <?php if (!empty($data['mobil'])): ?>
                                     <?php $no = 1; foreach ($data['mobil'] as $mobil): ?>
@@ -41,7 +41,7 @@
                                             <td><?= $no++; ?></td>
                                             <td>
                                                 <?php if (!empty($mobil['foto'])): ?>
-                                                    <img src="<?= BASEURL; ?>/uploads/mobil/<?= $mobil['foto']; ?>" alt="Mobil" class="img-thumbnail" style="width: 80px;">
+                                                    <img src="/public/uploads/mobil/<?= $mobil['foto']; ?>" alt="Mobil" class="img-thumbnail" style="width: 80px;">
                                                 <?php else: ?>
                                                     <span class="badge badge-secondary">Tidak Ada Foto</span>
                                                 <?php endif; ?>
@@ -56,14 +56,14 @@
                                                 </span>
                                             </td>
                                             <td class="text-center">
-                                                <a href="<?= BASEURL; ?>/admin/edit_mobil/<?= $mobil['id_mobil']; ?>" class="btn btn-sm btn-warning">Edit</a>
-                                                <a href="<?= BASEURL; ?>/admin/hapus_mobil/<?= $mobil['id_mobil']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus mobil ini?');">Hapus</a>
+                                                <a href="/edit_mobil/<?= $mobil['id_mobil']; ?>" class="btn btn-sm btn-warning">Edit</a>
+                                                <a href="/hapus_mobil/<?= $mobil['id_mobil']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus mobil ini?');">Hapus</a>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="8" class="text-center text-muted p-4">Belum ada data armada mobil di database Supabase.</td>
+                                        <td colspan="8" class="text-center text-muted p-4">Belum ada data armada mobil.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
@@ -75,15 +75,13 @@
     </div>
 </div>
 
-<div class="modal fade" id="modalTambahMobil" tabindex="-1" role="dialog" aria-labelledby="modalTambahMobilLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal" id="modalTambahMobil">
+    <div class="modal-dialog">
         <div class="modal-content">
-            <form action="<?= BASEURL; ?>/admin/tambah_mobil" method="POST" enctype="multipart/form-data">
+            <form action="/tambah_mobil" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalTambahMobilLabel">Form Tambah Armada Mobil</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <h5 class="modal-title">Form Tambah Armada Mobil</h5>
+                    <button type="button" class="close" onclick="document.getElementById('modalTambahMobil').classList.remove('show')">&times;</button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -119,7 +117,7 @@
                             <select name="status" class="form-control">
                                 <option value="Tersedia">Tersedia</option>
                                 <option value="Disewa">Disewa</option>
-                                <option value="Perawatan">Perawatan</option>
+                                <option value="Tidak Tersedia">Tidak Tersedia</option>
                             </select>
                         </div>
                     </div>
@@ -134,7 +132,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('modalTambahMobil').classList.remove('show')">Batal</button>
                     <button type="submit" class="btn btn-primary">Simpan Data</button>
                 </div>
             </form>

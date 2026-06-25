@@ -7,7 +7,7 @@
             <p>Lengkapi data di bawah ini untuk bergabung dengan kami</p>
         </div>
 
-        <form action="<?= BASEURL; ?>/auth/prosesRegister" method="POST">
+        <form action="/register" method="POST">
             <div class="form-group">
                 <label for="nama_lengkap">Nama Lengkap</label>
                 <input type="text" id="nama_lengkap" name="nama_lengkap" class="form-control" placeholder="Contoh: Budi Santoso" required autofocus>
@@ -36,7 +36,7 @@
         </form>
 
         <div class="auth-footer">
-            Sudah memiliki akun? <a href="<?= BASEURL; ?>/auth">Masuk di sini</a>
+            Sudah memiliki akun? <a href="/login">Masuk di sini</a>
         </div>
     </div>
 </section>

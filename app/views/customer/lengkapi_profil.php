@@ -8,7 +8,7 @@
         </div>
 
         <div class="profile-body">
-            <form action="<?= BASEURL; ?>/profile/uploadDokumen" method="POST" enctype="multipart/form-data">
+            <form action="/upload_dokumen" method="POST" enctype="multipart/form-data">
 
                 <h3 class="section-title"><i class="fas fa-user-edit"></i> Data Kontak & Alamat</h3>
 

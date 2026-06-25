@@ -7,7 +7,7 @@
             <p>Silakan masuk ke akun Anda untuk melanjutkan</p>
         </div>
 
-        <form action="<?= BASEURL; ?>/auth/prosesLogin" method="POST">
+        <form action="/login" method="POST">
             <div class="form-group">
                 <label for="email">Alamat Email</label>
                 <input type="email" id="email" name="email" class="form-control" placeholder="nama@email.com" required autofocus>
@@ -24,7 +24,7 @@
         </form>
 
         <div class="auth-footer">
-            Belum punya akun? <a href="<?= BASEURL; ?>/auth/register">Daftar sekarang</a>
+            Belum punya akun? <a href="/register">Daftar sekarang</a>
         </div>
     </div>
 </section>

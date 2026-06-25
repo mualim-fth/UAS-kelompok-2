@@ -1,12 +1,12 @@
-<?php include __DIR__ . '/../templates/header.php'; ?>
+<?php $css_halaman = 'admin'; include __DIR__ . '/../templates/header.php'; ?>
 
 <div class="container-fluid mt-4">
     <div class="row">
         <div class="col-md-3 mb-4">
             <div class="list-group shadow-sm">
-                <a href="<?= BASEURL; ?>/admin/dashboard" class="list-group-item list-group-item-action active">Dashboard</a>
-                <a href="<?= BASEURL; ?>/admin/kelola_mobil" class="list-group-item list-group-item-action">Kelola Mobil</a>
-                <a href="<?= BASEURL; ?>/admin/kelola_pesanan" class="list-group-item list-group-item-action">Kelola Pesanan</a>
+                <a href="/dashboard" class="list-group-item list-group-item-action active">Dashboard</a>
+                <a href="/kelola_mobil" class="list-group-item list-group-item-action">Kelola Mobil</a>
+                <a href="/kelola_pesanan" class="list-group-item list-group-item-action">Kelola Pesanan</a>
             </div>
         </div>
 

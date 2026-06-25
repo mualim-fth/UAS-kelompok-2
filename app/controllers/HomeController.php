@@ -1,10 +1,13 @@
 <?php
 
-class HomeController extends Controller
+class HomeController
 {
     public function index()
     {
-        $data['judul'] = 'Beranda - ' . APP_NAME;
-        $this->view('public/home', $data);
+        // 1. Siapkan data judul (akan dibaca otomatis oleh header.php)
+        $data['judul'] = 'Beranda - Rental Mobil';
+
+        // 2. Panggil file desain halamannya secara langsung
+        include __DIR__ . '/../views/public/home.php';
     }
 }
