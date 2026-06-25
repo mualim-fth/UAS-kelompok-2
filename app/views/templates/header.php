@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="/public/assets/css/base.css">
     
-    <?php if (isset($css_halaman)) : ?>
-        <link rel="stylesheet" href="/public/assets/css/<?= $css_halaman; ?>.css">
+<?php if (isset($css_halaman)) : ?>
+        <link rel="stylesheet" href="/public/assets/css/<?= $css_halaman; ?>.css?v=<?= time(); ?>">
     <?php endif; ?>
 </head>
 <body>
