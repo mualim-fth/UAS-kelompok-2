@@ -1,3 +1,4 @@
+// View: Form Booking
 <?php $css_halaman = 'booking'; include __DIR__ . '/../templates/header.php'; ?>
 
 <section class="container booking-wrapper">
