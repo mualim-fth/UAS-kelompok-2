@@ -1,4 +1,4 @@
-// Halaman register 
+<!--halaman register-->
 <?php $css_halaman = 'auth'; include __DIR__ . '/../templates/header.php'; ?>
 
 <section class="auth-wrapper">

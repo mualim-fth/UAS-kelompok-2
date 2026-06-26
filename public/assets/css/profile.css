@@ -1,56 +1,76 @@
 /* ============================================================
    PROFILE.CSS — Halaman Lengkapi Profil & Upload Dokumen
-   Load setelah base.css
    ============================================================ */
 
-.profile-wrapper {
-  max-width: 800px;
-  margin: 40px auto 60px;
-  background: var(--white);
-  border: 1px solid var(--slate-200);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
+.profile-section { padding-top: 40px; padding-bottom: 80px; }
+.profile-wrapper { max-width: 850px; margin: 0 auto; background: var(--white); border: 1px solid var(--slate-200); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); overflow: hidden; }
+.profile-header { background: linear-gradient(135deg, var(--sky-600) 0%, var(--sky-700) 100%); color: var(--white); padding: 36px 40px; text-align: center; border-bottom: 4px solid var(--sky-400); }
+.profile-header h2 { margin-bottom: 10px; color: var(--white); font-size: 1.6rem; font-weight: 700; }
+.profile-header p { color: var(--sky-100); font-size: 1rem; margin: 0; }
+.profile-body { padding: 40px; }
+.profile-section-title { font-size: 1.15rem; color: var(--ink); border-bottom: 2px solid var(--slate-100); padding-bottom: 12px; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
+.profile-section-title i { color: var(--sky-500); }
+
+/* --- Grid & Spacing --- */
+.profile-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.mt-3 { margin-top: 16px; }
+.mt-5 { margin-top: 48px; }
+.mb-0 { margin-bottom: 0; }
+.text-danger { color: var(--red-600); font-weight: 700; }
+.input-readonly { background-color: var(--slate-100) !important; color: var(--ink-soft) !important; cursor: not-allowed; border-color: var(--slate-200); }
+.input-readonly:focus { box-shadow: none; border-color: var(--slate-200); }
+.profile-hint { color: var(--ink-soft); margin-bottom: 24px; font-size: 0.95rem; background: var(--sky-50); padding: 12px 16px; border-radius: var(--radius-sm); border-left: 4px solid var(--sky-400); }
+.profile-upload-row { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+
+/* --- Area Upload & Preview --- */
+.upload-group { 
+    display: grid; 
+    grid-template-columns: 1fr auto; 
+    grid-template-areas: "label label" "upload preview" "status preview" "note preview"; 
+    column-gap: 20px; 
+    align-items: start; 
 }
 
-.profile-header {
-  background: linear-gradient(135deg, var(--sky-500), var(--sky-600));
-  color: var(--white);
-  padding: 34px;
-  text-align: center;
+.upload-group label { grid-area: label; font-weight: 600; margin-bottom: 8px; display: block; color: var(--ink); }
+
+/* KOTAK UPLOAD DIBUAT SANGAT KECIL DAN RINGKAS */
+.file-upload-wrapper { 
+    grid-area: upload; 
+    border: 1px dashed var(--slate-300); 
+    padding: 12px 16px; /* Padding dikecilkan */
+    border-radius: var(--radius-sm); 
+    background: var(--white); 
+    transition: all 0.3s ease; 
+}
+.file-upload-wrapper:hover { border-color: var(--sky-500); background: var(--sky-50); }
+.file-upload-wrapper.uploaded-success { border-color: var(--green-500); }
+
+/* MENGHILANGKAN IKON DAN TEKS YANG MEMBUAT KOTAK MEMBENGKAK */
+.upload-icon, .upload-instruction { 
+    display: none; 
 }
 
-.profile-header h2 {
-  margin-bottom: 8px;
-  color: var(--white);
-  font-size: 1.4rem;
-}
+/* Mempercantik tombol input file */
+.file-upload-wrapper input[type="file"] { display: block; width: 100%; font-size: 0.85rem; color: var(--ink-soft); cursor: pointer; }
+.file-upload-wrapper input[type="file"]::file-selector-button { background: var(--slate-100); border: 1px solid var(--slate-300); padding: 6px 14px; border-radius: var(--radius-sm); color: var(--ink); font-weight: 600; cursor: pointer; transition: background 0.2s ease; margin-right: 12px; }
+.file-upload-wrapper input[type="file"]::file-selector-button:hover { background: var(--slate-200); }
 
-.profile-header p {
-  color: var(--sky-100);
-  font-size: 0.92rem;
-}
+/* Status dan Note */
+.upload-status { grid-area: status; margin-top: 8px; color: var(--green-600); font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; }
+.upload-group small { grid-area: note; color: var(--slate-400); font-size: 0.8rem; margin-top: 4px; line-height: 1.4; }
 
-.profile-body {
-  padding: 40px 34px;
-}
+/* Kotak Preview Gambar */
+.image-preview-box { grid-area: preview; width: 130px; height: 85px; margin-top: 0; border-radius: var(--radius-sm); border: 1px solid var(--slate-200); overflow: hidden; background-color: var(--slate-50); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.img-preview { width: 100%; height: 100%; object-fit: cover; }
 
-.file-upload-wrapper {
-  border: 2px dashed var(--slate-200);
-  padding: 26px 20px;
-  text-align: center;
-  border-radius: var(--radius-md);
-  background: var(--sky-50);
-  margin-bottom: 10px;
-  transition: all 0.25s ease;
-}
+/* --- Tombol Submit --- */
+.btn-submit-profile { margin-top: 40px; padding: 16px; font-size: 1.1rem; border-radius: var(--radius-sm); box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3); width: 100%; }
+.btn-submit-profile i { margin-right: 8px; }
 
-.file-upload-wrapper:hover {
-  border-color: var(--sky-400);
-  background: var(--sky-100);
-}
-
-.file-upload-wrapper input[type="file"] {
-  display: block;
-  margin: 15px auto 0;
-  max-width: 100%;
+/* --- Responsivitas --- */
+@media (max-width: 992px) { .profile-upload-row { grid-template-columns: 1fr; } }
+@media (max-width: 768px) { .profile-form-row { grid-template-columns: 1fr; gap: 20px; } .profile-header { padding: 24px 20px; } .profile-body { padding: 24px 20px; } }
+@media (max-width: 576px) { 
+    .upload-group { grid-template-columns: 1fr; grid-template-areas: "label" "upload" "status" "preview" "note"; } 
+    .image-preview-box { margin-top: 12px; } 
 }
