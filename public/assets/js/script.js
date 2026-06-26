@@ -1,3 +1,4 @@
+// File: public/assets/js/script.js
 document.addEventListener('DOMContentLoaded', function() {
     
     // 1. Validasi Dinamis Kalender Booking
