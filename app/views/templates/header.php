@@ -25,23 +25,29 @@
         </a>
         
         <ul class="nav-menu">
-            <li><a href="/home">Beranda</a></li>
-            <li><a href="/car">Katalog Mobil</a></li>
-            
-            <?php if (isset($_SESSION['user_id'])) : ?>
-                <?php if ($_SESSION['role'] == 'admin') : ?>
-                    <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <?php else : ?>
-                    <li><a href="/riwayat"><i class="fas fa-history"></i> Riwayat</a></li>
-                    <li><a href="/profile"><i class="fas fa-user-circle"></i> Profil</a></li>
-                <?php endif; ?>
-                
+            <?php if (isset($_SESSION['user_id']) && $_SESSION['role'] == 'admin') : ?>
+                <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="/car" target="_blank"><i class="fas fa-external-link-alt"></i> Lihat Web Publik</a></li>
                 <li>
                     <a href="/logout" class="btn btn-danger btn-nav-logout" onclick="return confirm('Apakah Anda yakin ingin keluar?');">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </a>
                 </li>
+
+            <?php elseif (isset($_SESSION['user_id']) && $_SESSION['role'] == 'customer') : ?>
+                <li><a href="/home">Beranda</a></li>
+                <li><a href="/car">Katalog Mobil</a></li>
+                <li><a href="/riwayat"><i class="fas fa-history"></i> Riwayat</a></li>
+                <li><a href="/profile"><i class="fas fa-user-circle"></i> Profil</a></li>
+                <li>
+                    <a href="/logout" class="btn btn-danger btn-nav-logout" onclick="return confirm('Apakah Anda yakin ingin keluar?');">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </li>
+
             <?php else : ?>
+                <li><a href="/home">Beranda</a></li>
+                <li><a href="/car">Katalog Mobil</a></li>
                 <li><a href="/login" class="nav-link-login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
                 <li><a href="/register" class="btn btn-primary">Daftar</a></li>
             <?php endif; ?>
