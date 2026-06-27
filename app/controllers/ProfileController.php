@@ -1,130 +1,139 @@
 <?php
 
-// Tidak ada lagi "extends Controller"
 class ProfileController 
 {
-    // =================================================================
-    // MIDDLEWARE / PROTEKSI CONSTRUCTOR
-    // =================================================================
     public function __construct()
     {
-        // Pastikan hanya user yang sudah login yang bisa mengakses controller ini
         if (!isset($_SESSION['user_id'])) {
             header('Location: /login');
             exit;
         }
     }
 
-    // =================================================================
-    // MENAMPILKAN HALAMAN PROFIL
-    // =================================================================
     public function index()
     {
         $data['judul'] = 'Profil Saya - ' . APP_NAME;
         
-        // Ambil data user yang sedang login dari database menggunakan pemanggilan manual
         require_once __DIR__ . '/../models/UserModel.php';
         $userModel = new UserModel();
         $data['user'] = $userModel->getById($_SESSION['user_id']);
 
-        // Arahkan ke view form lengkapi profil menggunakan include
+        // Menangkap array pesan error/sukses dari session
+        $data['flash_error'] = $_SESSION['flash_error'] ?? [];
+        $data['flash_sukses'] = $_SESSION['flash_sukses'] ?? [];
+        
+        // Hapus session setelah ditangkap
+        unset($_SESSION['flash_error'], $_SESSION['flash_sukses']);
+
         include __DIR__ . '/../views/customer/lengkapi_profil.php';
     }
 
-    // =================================================================
-    // PROSES UPLOAD KTP & SIM (INTI MANAJEMEN FILE)
-    // =================================================================
-    // =================================================================
-    // PROSES UPLOAD KTP & SIM (INTI MANAJEMEN FILE)
-    // =================================================================
     public function uploadDokumen()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             $userId = $_SESSION['user_id'];
+            $pesanError = []; // Keranjang untuk menyimpan semua error
             $pesanSukses = [];
-            $pesanError = [];
 
-            // Panggil UserModel untuk persiapan update data
             require_once __DIR__ . '/../models/UserModel.php';
             $userModel = new UserModel();
+            $currentUser = $userModel->getById($userId);
 
-            // =========================================================
-            // 1. BLOK BARU: SIMPAN DATA TEKS (NO HP & ALAMAT)
-            // =========================================================
-            // Karena 'nama_lengkap' tidak dikirim oleh form HTML, 
-            // kita suntikkan datanya dari Session agar UserModel tidak error.
-            $_POST['nama_lengkap'] = $_SESSION['nama_lengkap'];
+            // ==========================================
+            // TAHAP 1: KUMPULKAN SEMUA ERROR (VALIDASI)
+            // ==========================================
             
-            if ($userModel->update($userId, $_POST)) {
-                $pesanSukses[] = "Data alamat dan nomor HP tersimpan.";
-            } else {
-                $pesanError[] = "Gagal menyimpan data teks.";
+            // Cek Nomor HP
+            $nomorHp = trim($_POST['nomor_hp'] ?? '');
+            if (empty($nomorHp)) {
+                $pesanError[] = "Nomor HP wajib diisi.";
+            } elseif (!is_numeric($nomorHp)) {
+                $pesanError[] = "Nomor HP hanya boleh berisi angka.";
+            } elseif (strlen($nomorHp) < 10 || strlen($nomorHp) > 15) {
+                $pesanError[] = "Nomor HP harus antara 10 hingga 15 digit.";
             }
 
-            // =========================================================
-            // 2. BLOK PEMROSESAN FOTO KTP
-            // =========================================================
-            if (isset($_FILES['foto_ktp']) && $_FILES['foto_ktp']['error'] === UPLOAD_ERR_OK) {
+            // Cek Alamat
+            $alamat = trim($_POST['alamat'] ?? '');
+            if (empty($alamat)) {
+                $pesanError[] = "Alamat domisili wajib diisi.";
+            } elseif (strlen($alamat) < 10) {
+                $pesanError[] = "Alamat terlalu singkat, mohon isi minimal 10 karakter.";
+            }
+
+            // Aturan File
+            $maxSize = 2 * 1024 * 1024; // 2MB
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+
+            // Cek Foto KTP
+            $fileKtp = $_FILES['foto_ktp'] ?? null;
+            $ktpSudahAda = !empty($currentUser['foto_ktp']);
+            
+            if ($fileKtp && $fileKtp['error'] === UPLOAD_ERR_OK) {
+                if (!in_array($fileKtp['type'], $allowedTypes)) {
+                    $pesanError[] = "Format file KTP harus berupa JPG atau PNG.";
+                } elseif ($fileKtp['size'] > $maxSize) {
+                    $pesanError[] = "Ukuran file KTP terlalu besar (Maksimal 2MB).";
+                }
+            } elseif (!$ktpSudahAda) {
+                $pesanError[] = "Anda wajib melampirkan foto KTP.";
+            }
+
+            // Cek Foto SIM
+            $fileSim = $_FILES['foto_sim'] ?? null;
+            $simSudahAda = !empty($currentUser['foto_sim']);
+            
+            if ($fileSim && $fileSim['error'] === UPLOAD_ERR_OK) {
+                if (!in_array($fileSim['type'], $allowedTypes)) {
+                    $pesanError[] = "Format file SIM harus berupa JPG atau PNG.";
+                } elseif ($fileSim['size'] > $maxSize) {
+                    $pesanError[] = "Ukuran file SIM terlalu besar (Maksimal 2MB).";
+                }
+            } elseif (!$simSudahAda) {
+                $pesanError[] = "Anda wajib melampirkan foto SIM A.";
+            }
+
+            // ==========================================
+            // TAHAP 2: EKSEKUSI JIKA TIDAK ADA ERROR
+            // ==========================================
+            if (empty($pesanError)) {
                 
-                $tipeMimeKtp = $_FILES['foto_ktp']['type'];
-                $ukuranKtp   = $_FILES['foto_ktp']['size'];
-                $tmpKtp      = $_FILES['foto_ktp']['tmp_name'];
+                // 1. Simpan Teks (Alamat & HP)
+                $dataUpdate = [
+                    'nama_lengkap' => $_SESSION['nama_lengkap'],
+                    'nomor_hp'     => $nomorHp,
+                    'alamat'       => $alamat
+                ];
+                $userModel->update($userId, $dataUpdate);
 
-                if (in_array($tipeMimeKtp, UPLOAD_ALLOWED_TYPES) && $ukuranKtp <= UPLOAD_MAX_SIZE) {
-                    
-                    $ekstensiKtp = pathinfo($_FILES['foto_ktp']['name'], PATHINFO_EXTENSION);
-                    $namaFileKtp = uniqid('ktp_') . '.' . $ekstensiKtp;
-
-                    if (move_uploaded_file($tmpKtp, UPLOAD_KTP_SIM . $namaFileKtp)) {
+                // 2. Simpan File KTP (Jika ada yang diunggah)
+                if ($fileKtp && $fileKtp['error'] === UPLOAD_ERR_OK) {
+                    $ekstensi = pathinfo($fileKtp['name'], PATHINFO_EXTENSION);
+                    $namaFileKtp = uniqid('ktp_') . '.' . $ekstensi;
+                    if (move_uploaded_file($fileKtp['tmp_name'], UPLOAD_KTP_SIM . $namaFileKtp)) {
                         $userModel->updateFotoKtp($userId, $namaFileKtp);
-                        $pesanSukses[] = "Foto KTP berhasil diunggah.";
-                    } else {
-                        $pesanError[] = "Gagal memindahkan file KTP ke server.";
                     }
-                } else {
-                    $pesanError[] = "Format KTP tidak valid atau ukuran lebih dari 2MB.";
                 }
-            }
 
-            // =========================================================
-            // 3. BLOK PEMROSESAN FOTO SIM
-            // =========================================================
-            if (isset($_FILES['foto_sim']) && $_FILES['foto_sim']['error'] === UPLOAD_ERR_OK) {
-                
-                $tipeMimeSim = $_FILES['foto_sim']['type'];
-                $ukuranSim   = $_FILES['foto_sim']['size'];
-                $tmpSim      = $_FILES['foto_sim']['tmp_name'];
-
-                if (in_array($tipeMimeSim, UPLOAD_ALLOWED_TYPES) && $ukuranSim <= UPLOAD_MAX_SIZE) {
-                    
-                    $ekstensiSim = pathinfo($_FILES['foto_sim']['name'], PATHINFO_EXTENSION);
-                    $namaFileSim = uniqid('sim_') . '.' . $ekstensiSim;
-
-                    if (move_uploaded_file($tmpSim, UPLOAD_KTP_SIM . $namaFileSim)) {
+                // 3. Simpan File SIM (Jika ada yang diunggah)
+                if ($fileSim && $fileSim['error'] === UPLOAD_ERR_OK) {
+                    $ekstensi = pathinfo($fileSim['name'], PATHINFO_EXTENSION);
+                    $namaFileSim = uniqid('sim_') . '.' . $ekstensi;
+                    if (move_uploaded_file($fileSim['tmp_name'], UPLOAD_KTP_SIM . $namaFileSim)) {
                         $userModel->updateFotoSim($userId, $namaFileSim);
-                        $pesanSukses[] = "Foto SIM berhasil diunggah.";
-                    } else {
-                        $pesanError[] = "Gagal memindahkan file SIM ke server.";
                     }
-                } else {
-                    $pesanError[] = "Format SIM tidak valid atau ukuran lebih dari 2MB.";
                 }
+
+                $pesanSukses[] = "Profil dan dokumen Anda berhasil diperbarui.";
+                $_SESSION['flash_sukses'] = $pesanSukses;
+            } else {
+                // Jika ada error, masukkan array $pesanError ke session
+                $_SESSION['flash_error'] = $pesanError;
             }
 
-            // =========================================================
-            // 4. LOGIKA NOTIFIKASI PENGGUNA
-            // =========================================================
-            $alertMsg = "";
-            if (!empty($pesanSukses)) {
-                $alertMsg .= implode("\\n", $pesanSukses) . "\\n";
-            }
-            if (!empty($pesanError)) {
-                $alertMsg .= implode("\\n", $pesanError);
-            }
-
-            // Pantulkan kembali ke halaman profil
-            echo "<script>alert('$alertMsg'); window.location.href='/profile';</script>";
+            // Kembali ke halaman profil
+            header('Location: /profile');
             exit;
         }
     }
