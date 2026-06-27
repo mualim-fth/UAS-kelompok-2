@@ -30,14 +30,14 @@
                     </div>
                     <div class="col-md-6 form-group">
                         <label>Kapasitas Penumpang</label>
-                        <input type="number" name="kapasitas" class="form-control" value="<?= htmlspecialchars($data['mobil']['kapasitas']); ?>" required>
+                        <input type="number" name="kapasitas" class="form-control" value="<?= htmlspecialchars($data['mobil']['kapasitas']); ?>" min="1" required>
                     </div>
                 </div>
 
                 <div class="row mt-3">
                     <div class="col-md-6 form-group">
                         <label>Harga Sewa per Hari (Rp)</label>
-                        <input type="number" name="harga_per_hari" class="form-control" value="<?= htmlspecialchars($data['mobil']['harga_per_hari']); ?>" required>
+                        <input type="number" name="harga_per_hari" class="form-control" value="<?= htmlspecialchars($data['mobil']['harga_per_hari']); ?>" min="1" required>
                     </div>
                     <div class="col-md-6 form-group">
                         <label>Status</label>
@@ -54,7 +54,7 @@
                     <textarea name="deskripsi" class="form-control" rows="3"><?= htmlspecialchars($data['mobil']['deskripsi'] ?? ''); ?></textarea>
                 </div>
 
-                <div class="form-group mt-4 p-3" style="background-color: #f8f9fa; border-radius: 8px;">
+                <div class="form-group mt-4 p-3 mb-4" style="background-color: #f8f9fa; border-radius: 8px;">
                     <label>Perbarui Foto Mobil (Opsional)</label><br>
                     <?php if (!empty($data['mobil']['foto'])): ?>
                         <div class="mb-2">
@@ -66,7 +66,7 @@
                     <small class="text-muted d-block mt-1">Biarkan kosong jika tidak ingin mengubah foto. (Maks 2MB, JPG/PNG)</small>
                 </div>
 
-                <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+                <div class="d-flex justify-content-end mt-5 pt-4 border-top">
                     <a href="/kelola_mobil" class="btn btn-secondary mr-2" style="margin-right: 10px;">Batal</a>
                     <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Perubahan</button>
                 </div>
