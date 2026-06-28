@@ -137,6 +137,12 @@ switch ($halaman) {
         $controller->updateStatus($id, $status_baru); 
         break;
 
+    case 'batalkan':
+        require_once '../app/controllers/BookingController.php';
+        $controller = new BookingController();
+        $controller->cancel($id);
+        break;
+
     case 'edit_mobil':
         require_once '../app/controllers/CarController.php';
         $controller = new CarController();
