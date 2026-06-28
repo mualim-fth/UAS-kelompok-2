@@ -91,32 +91,6 @@
     </div>
 </section>
 
-<section id="keunggulan" class="rh-features bg-light">
-    <div class="container">
-        <div class="rh-section-header">
-            <h2>Layanan Bintang Lima untuk Anda</h2>
-            <p>Kami memastikan pengalaman penyewaan mobil Anda aman, nyaman, dan sama sekali tidak merepotkan.</p>
-        </div>
-        <div class="rh-features-grid">
-            <div class="rh-feature-card">
-                <div class="rh-icon-wrapper"><i class="fas fa-tags"></i></div>
-                <h3>Harga Transparan</h3>
-                <p>Tidak ada biaya tersembunyi yang mengejutkan. Harga sewa harian yang Anda lihat di katalog adalah harga pas yang Anda bayarkan.</p>
-            </div>
-            <div class="rh-feature-card">
-                <div class="rh-icon-wrapper"><i class="fas fa-tools"></i></div>
-                <h3>Armada Prima & Bersih</h3>
-                <p>Kenyamanan Anda adalah prioritas. Setiap mobil rutin masuk bengkel dan kabinnya disterilisasi sebelum kunci diserahkan ke tangan Anda.</p>
-            </div>
-            <div class="rh-feature-card">
-                <div class="rh-icon-wrapper"><i class="fas fa-user-shield"></i></div>
-                <h3>Privasi Terjamin</h3>
-                <p>Proses unggah foto KTP dan SIM dilindungi dengan enkripsi tinggi. Data pribadi Anda aman di server kami dan hanya digunakan untuk verifikasi sewa.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
 <section class="rh-steps">
     <div class="container">
         <div class="rh-section-header">
