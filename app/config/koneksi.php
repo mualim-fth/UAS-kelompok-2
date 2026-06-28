@@ -7,13 +7,11 @@ class Database
 
     private function __construct()
     {
-        // 1. TULIS KREDENSIAL XAMPP LANGSUNG DI SINI
         $host = 'localhost';
         $user = 'root';
-        $pass = '';             // Default XAMPP biasanya kosong
-        $db   = 'rental_mobil'; // Sesuaikan jika nama database kamu berbeda
+        $pass = '';
+        $db   = 'rental_mobil';
 
-        // 2. Buat koneksi PDO yang simpel dan kuat
         $dsn = "mysql:host={$host};dbname={$db};charset=utf8mb4";
 
         $options = [
@@ -29,7 +27,7 @@ class Database
         }
     }
 
-    // Fungsi Singleton untuk dipanggil oleh Model (Jangan dihapus)
+    // Fungsi Singleton untuk dipanggil oleh Model
     public static function getInstance()
     {
         if (self::$instance === null) {
@@ -44,6 +42,11 @@ class Database
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
         return $stmt;
+    }
+
+    public function prepare($sql)
+    {
+        return $this->pdo->prepare($sql);
     }
 
     // Fungsi untuk mendapatkan ID terakhir yang disimpan
