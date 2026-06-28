@@ -67,6 +67,40 @@
 .btn-submit-profile { margin-top: 40px; padding: 16px; font-size: 1.1rem; border-radius: var(--radius-sm); box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3); width: 100%; }
 .btn-submit-profile i { margin-right: 8px; }
 
+/* Alert validasi */
+.alert-box {
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    border-left: 4px solid transparent;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.alert-box strong {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+}
+.alert-box ul {
+    margin: 8px 0 0 20px;
+    padding-left: 0;
+}
+.alert-box ul li {
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+}
+.alert-danger {
+    border-left-color: #dc2626;
+    background: #fef2f2;
+    color: #991b1b;
+}
+.alert-success {
+    border-left-color: #16a34a;
+    background: #f0fdf4;
+    color: #166534;
+}
+
 /* --- Responsivitas --- */
 @media (max-width: 992px) { .profile-upload-row { grid-template-columns: 1fr; } }
 @media (max-width: 768px) { .profile-form-row { grid-template-columns: 1fr; gap: 20px; } .profile-header { padding: 24px 20px; } .profile-body { padding: 24px 20px; } }
