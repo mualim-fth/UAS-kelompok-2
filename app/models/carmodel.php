@@ -62,7 +62,7 @@ class CarModel
 
         $sql = "UPDATE mobil
                 SET merk = :merk, tipe = :tipe, transmisi = :transmisi, kapasitas = :kapasitas,
-                    harga_per_hari = :harga_per_hari, deskripsi = :deskripsi, status = :status
+                    harga_per_hari = :harga_per_hari, deskripsi = :deskripsi, status = :status, foto = :foto
                 WHERE id_mobil = :id_mobil";
 
         $stmt = $this->db->prepare($sql);
@@ -75,6 +75,7 @@ class CarModel
             ':harga_per_hari' => $data['harga_per_hari'],
             ':deskripsi'      => $data['deskripsi'] ?? null,
             ':status'         => $data['status'],
+            ':foto'           => $data['foto'],
             ':id_mobil'       => $id
         ]);
         

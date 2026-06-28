@@ -73,7 +73,7 @@
                     <label>Perbarui Foto Mobil (Opsional)</label><br>
                     <?php if (!empty($data['mobil']['foto'])): ?>
                         <div class="mb-2">
-                            <img src="<?= BASEURL; ?>/uploads/mobil/<?= $data['mobil']['foto']; ?>" alt="Foto Lama" class="img-thumbnail" style="max-height: 100px;">
+                            <img src="/public/uploads/mobil/<?= $data['mobil']['foto']; ?>" alt="Foto Lama" class="img-thumbnail" style="max-height: 100px;">
                             <small class="text-muted d-block mt-1">Foto saat ini</small>
                         </div>
                     <?php endif; ?>
