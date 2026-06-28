@@ -7,9 +7,86 @@
             <h1 class="rh-title">sewa mobil mudah</h1>
             <p class="rh-subtitle">Liburan keluarga, acara pernikahan, atau urusan bisnis? Kami menyediakan berbagai pilihan armada terawat dengan harga jujur dan proses pemesanan yang super cepat tanpa antre panjang.</p>
             <div class="rh-hero-actions">
-                <a href="/car" class="btn btn-primary btn-lg"><i class="fas fa-car-side"></i> Pesan Sekarang</a>
-                <a href="#keunggulan" class="btn btn-outline btn-lg">Kenapa Memilih Kami?</a>
+                <a href="<?= BASEURL; ?>/car" class="btn btn-primary btn-lg"><i class="fas fa-car-side"></i> Pesan Sekarang</a>
+                <a href="#tentang-kami" class="btn btn-outline btn-lg">Tentang Kami</a>
             </div>
+        </div>
+    </div>
+</section>
+
+<section id="tentang-kami" class="rh-about">
+    <div class="container">
+        <div class="rh-about-grid">
+
+            <div class="rh-about-content">
+                <span class="badge badge-sky mb-3">Tentang Kami</span>
+                <h2 class="rh-about-title">Layanan Rental Mobil <span class="rh-text-sky">Terpercaya</span> untuk Semua Kebutuhan</h2>
+                <p class="rh-about-desc">Kami adalah platform reservasi rental mobil yang hadir untuk memudahkan perjalanan Anda. Dengan armada terawat, proses pemesanan yang simpel, dan verifikasi identitas yang aman, kami memastikan setiap perjalanan Anda nyaman dan terjamin.</p>
+                <p class="rh-about-desc">Didukung oleh tim yang berpengalaman dan sistem berbasis teknologi, kami melayani kebutuhan transportasi harian, perjalanan bisnis, hingga liburan keluarga dengan standar layanan terbaik.</p>
+
+                <div class="rh-about-points">
+                    <div class="rh-about-point">
+                        <div class="rh-about-point-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div>
+                            <strong>Identitas Terverifikasi</strong>
+                            <p>Setiap penyewa wajib mengunggah KTP & SIM sebelum menyewa, sehingga armada kami terlindungi dengan baik.</p>
+                        </div>
+                    </div>
+                    <div class="rh-about-point">
+                        <div class="rh-about-point-icon"><i class="fas fa-car"></i></div>
+                        <div>
+                            <strong>Armada Terawat</strong>
+                            <p>Seluruh kendaraan kami menjalani pengecekan rutin untuk memastikan performa dan keamanan berkendara.</p>
+                        </div>
+                    </div>
+                    <div class="rh-about-point">
+                        <div class="rh-about-point-icon"><i class="fas fa-headset"></i></div>
+                        <div>
+                            <strong>Layanan Responsif</strong>
+                            <p>Admin kami siap memproses pesanan dan konfirmasi pembayaran dengan cepat dan profesional.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="<?= BASEURL; ?>/car" class="btn btn-primary" style="margin-top: 10px;">
+                    <i class="fas fa-car-side"></i> Mulai Sewa Sekarang
+                </a>
+            </div>
+
+            <div class="rh-about-visual">
+                <div class="rh-about-card">
+                    <div class="rh-about-card-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h3>Rental Mobil</h3>
+                    <p>Proses reservasi online mudah & cepat</p>
+                    <div class="rh-about-mini-cards">
+                        <div class="rh-about-mini-card">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Booking Online</span>
+                        </div>
+                        <div class="rh-about-mini-card">
+                            <i class="fas fa-id-card"></i>
+                            <span>Verifikasi KTP/SIM</span>
+                        </div>
+                        <div class="rh-about-mini-card">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Harga Transparan</span>
+                        </div>
+                        <div class="rh-about-mini-card">
+                            <i class="fas fa-tools"></i>
+                            <span>Armada Terawat</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="rh-about-badge rh-about-badge-1">
+                    <i class="fas fa-star"></i> Terpercaya
+                </div>
+                <div class="rh-about-badge rh-about-badge-2">
+                    <i class="fas fa-check-circle"></i> Terverifikasi
+                </div>
+            </div>
+
         </div>
     </div>
 </section>
@@ -75,9 +152,9 @@
             </div>
             <div class="rh-cta-button">
                 <?php if (!isset($_SESSION['user_id'])) : ?>
-                    <a href="/register" class="btn btn-light btn-lg">Daftar & Sewa Sekarang</a>
+                    <a href="<?= BASEURL; ?>/auth/register" class="btn btn-light btn-lg">Daftar & Sewa Sekarang</a>
                 <?php else : ?>
-                    <a href="/car" class="btn btn-light btn-lg">Lihat Katalog Mobil</a>
+                    <a href="<?= BASEURL; ?>/car" class="btn btn-light btn-lg">Lihat Katalog Mobil</a>
                 <?php endif; ?>
             </div>
         </div>
