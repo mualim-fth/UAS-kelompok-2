@@ -1,117 +1,430 @@
 /* ============================================================
    BOOKING.CSS — Halaman Form Booking
    Load setelah base.css
+   Dikerjakan oleh Anggota 2
    ============================================================ */
 
+/* ── Layout Utama ── */
 .booking-wrapper {
-  margin-top: 30px;
-  margin-bottom: 60px;
+    margin-top: 30px;
+    margin-bottom: 60px;
 }
 
-/* Tombol Back */
 .btn-back {
-  display: inline-block;
-  margin-bottom: 20px;
-  color: var(--slate-600);
-  font-weight: 500;
-  text-decoration: none;
-  transition: color 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    color: var(--ink-soft);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
 }
 
-.btn-back:hover {
-  color: var(--primary);
-}
+.btn-back:hover { color: var(--sky-600); }
 
 .booking-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 26px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 26px;
 }
 
 @media (max-width: 768px) {
-  .booking-grid {
-    grid-template-columns: 1fr;
-    display: flex;
-    flex-direction: column-reverse;
-  }
+    .booking-grid {
+        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column-reverse;
+    }
 }
 
+/* ── Kartu Form & Ringkasan ── */
 .booking-form-card,
 .booking-summary-card {
-  background: var(--white);
-  border: 1px solid var(--slate-200);
-  padding: 32px;
-  border-radius: var(--radius-lg);
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    padding: 32px;
+    border-radius: var(--radius-lg);
 }
 
 .booking-summary-card {
-  position: sticky;
-  top: 90px;
-  height: fit-content;
-  background: var(--sky-50);
-  border-color: var(--sky-100);
+    position: sticky;
+    top: 90px;
+    height: fit-content;
+    background: var(--sky-50);
+    border-color: var(--sky-100);
 }
 
+/* ── Header Form ── */
+.booking-form-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.booking-form-title i { color: var(--sky-500); }
+
+.booking-divider {
+    border: none;
+    height: 1px;
+    background: var(--slate-200);
+    margin-bottom: 28px;
+}
+
+/* ── Label Step Bernomor ── */
+.booking-section-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--ink);
+    margin: 28px 0 16px;
+}
+
+.booking-step-number {
+    width: 28px;
+    height: 28px;
+    background: var(--sky-500);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+/* ── Grid Tanggal ── */
+.booking-date-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 600px) {
+    .booking-date-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Input ── */
+input[type="date"].form-control,
+select.form-control {
+    font-family: inherit;
+    color: var(--ink);
+    cursor: pointer;
+}
+
+.text-required { color: var(--red-600); }
+
+/* ── Kartu Opsi Pembayaran ── */
+.payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.payment-option-card {
+    border: 2px solid var(--slate-200);
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: block;
+}
+
+.payment-option-card:hover {
+    border-color: var(--sky-300);
+    background: var(--sky-50);
+}
+
+.payment-option-card.selected {
+    border-color: var(--sky-500);
+    background: var(--sky-50);
+    box-shadow: 0 0 0 4px var(--sky-100);
+}
+
+.payment-option-card input[type="radio"] {
+    display: none;
+}
+
+.payment-option-inner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.payment-option-icon {
+    width: 46px;
+    height: 46px;
+    background: var(--sky-100);
+    color: var(--sky-600);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.payment-icon-qris { background: #f0fdf4; color: #16a34a; }
+.payment-icon-cod  { background: var(--amber-100); color: var(--amber-600); }
+
+.payment-option-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.payment-option-info strong {
+    font-size: 0.97rem;
+    color: var(--ink);
+}
+
+.payment-option-info span {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+}
+
+.payment-option-check {
+    color: var(--slate-200);
+    font-size: 1.3rem;
+    transition: color 0.2s;
+}
+
+.payment-option-card.selected .payment-option-check {
+    color: var(--sky-500);
+}
+
+/* ── Area Upload Bukti ── */
+.bukti-upload-wrapper {
+    margin-top: 8px;
+    animation: fadeInDown 0.3s ease;
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.bukti-info-box {
+    background: var(--sky-50);
+    border: 1px solid var(--sky-100);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+}
+
+.bukti-info-box i { color: var(--sky-500); margin-top: 2px; }
+
+/* ── Info Rekening ── */
+.rekening-box {
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.rekening-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.rekening-item .bank-logo {
+    width: 48px;
+    height: auto;
+    object-fit: contain;
+}
+
+.rekening-item div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.rekening-item strong {
+    font-size: 0.9rem;
+    color: var(--ink);
+}
+
+.rekening-item span {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+}
+
+/* ── Info QRIS ── */
+.qris-box {
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-sm);
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.qris-box p {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    margin-top: 14px;
+    line-height: 1.6;
+}
+
+/* ── Wrapper Upload File ── */
+.file-upload-wrapper {
+    border: 2px dashed var(--sky-200);
+    border-radius: var(--radius-md);
+    padding: 28px 20px;
+    text-align: center;
+    background: var(--sky-50);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.file-upload-wrapper:hover {
+    border-color: var(--sky-400);
+    background: var(--sky-100);
+}
+
+.file-upload-wrapper input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+/* ── Tombol Submit ── */
+.booking-submit-btn {
+    margin-top: 32px;
+    padding: 16px;
+    font-size: 1.05rem;
+}
+
+/* ── Ringkasan Kanan ── */
 .booking-summary-card img {
-  width: 100%;
-  height: 170px;
-  object-fit: cover;
-  border-radius: var(--radius-md);
-  margin-bottom: 16px;
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    margin-bottom: 16px;
 }
 
-.summary-title {
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  font-weight: 700;
-  margin-bottom: 6px;
+.booking-summary-title {
+    font-size: 1rem;
+    color: var(--ink-soft);
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.booking-summary-no-img {
+    width: 100%;
+    height: 170px;
+    background: var(--sky-50);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--sky-200);
+    margin-bottom: 16px;
+}
+
+.summary-car-name {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 6px;
 }
 
 .summary-price {
-  font-size: 1.1rem;
-  color: var(--sky-600);
-  font-weight: 700;
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px dashed var(--sky-200);
+    font-size: 1.1rem;
+    color: var(--sky-600);
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px dashed var(--sky-200);
 }
+
+.summary-price span {
+    font-size: 0.85rem;
+    color: var(--slate-400);
+    font-weight: 400;
+}
+
+.summary-specs {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.summary-spec-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+}
+
+.summary-spec-item i { color: var(--sky-500); }
 
 .summary-note {
-  font-size: 0.88rem;
-  color: var(--ink-soft);
-  line-height: 1.65;
-  background: var(--white);
-  padding: 16px;
-  border-radius: var(--radius-sm);
-  border-left: 3px solid var(--sky-500);
+    background: var(--white);
+    border-left: 3px solid var(--sky-500);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 12px 16px;
+    display: flex;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-bottom: 20px;
 }
 
-input[type="date"].form-control,
-input[type="file"].form-control,
-select.form-control {
-  font-family: inherit;
-  color: var(--ink);
-  cursor: pointer;
+.summary-note i { color: var(--sky-500); margin-top: 2px; flex-shrink: 0; }
+.summary-note p { margin: 0; }
+
+.summary-user-info {
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-md);
+    padding: 16px;
 }
 
-input[type="file"].form-control {
-  padding: 8px 12px;
-  font-size: 0.9rem;
-  background-color: var(--slate-50);
+.summary-user-title {
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: var(--ink);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-input[type="file"]::file-selector-button {
-  background-color: var(--primary);
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-right: 10px;
-  font-size: 0.85rem;
-  transition: background-color 0.2s;
+.summary-user-title i { color: var(--sky-500); }
+
+.summary-user-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--slate-100);
 }
 
-input[type="file"]::file-selector-button:hover {
-  background-color: var(--primary-dark);
-}
+.summary-user-row:last-child { border-bottom: none; }
+.summary-user-row span { color: var(--ink-soft); }
+.summary-user-row strong { color: var(--ink); }
