@@ -165,4 +165,32 @@ class BookingController
         }
         exit;
     }
+
+    public function cancel($id)
+    {
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: /login');
+            exit;
+        }
+
+        require_once __DIR__ . '/../models/BookingModel.php';
+        $bookingModel = new BookingModel();
+        
+        // Ambil data booking dulu untuk update status mobil
+        $booking = $bookingModel->getById((int)$id);
+        
+        if ($booking && $booking['id_user'] == $_SESSION['user_id'] && $booking['status'] == 'Pending') {
+            $bookingModel->cancel((int)$id, $_SESSION['user_id']);
+            
+            // Kembalikan status mobil jadi Tersedia
+            require_once __DIR__ . '/../models/CarModel.php';
+            $carModel = new CarModel();
+            $carModel->updateStatus($booking['id_mobil'], 'Tersedia');
+
+            echo "<script>alert('Pesanan berhasil dibatalkan.'); window.location.href='/riwayat';</script>";
+        } else {
+            echo "<script>alert('Pesanan tidak dapat dibatalkan.'); window.location.href='/riwayat';</script>";
+        }
+        exit;
+    }
 }
