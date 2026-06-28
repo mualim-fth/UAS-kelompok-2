@@ -7,7 +7,7 @@
             <h1 class="rh-title">sewa mobil mudah</h1>
             <p class="rh-subtitle">Liburan keluarga, acara pernikahan, atau urusan bisnis? Kami menyediakan berbagai pilihan armada terawat dengan harga jujur dan proses pemesanan yang super cepat tanpa antre panjang.</p>
             <div class="rh-hero-actions">
-                <a href="<?= BASEURL; ?>/car" class="btn btn-primary btn-lg"><i class="fas fa-car-side"></i> Pesan Sekarang</a>
+                <a href="/car" class="btn btn-primary btn-lg"><i class="fas fa-car-side"></i> Pesan Sekarang</a>
                 <a href="#tentang-kami" class="btn btn-outline btn-lg">Tentang Kami</a>
             </div>
         </div>
@@ -48,7 +48,7 @@
                     </div>
                 </div>
 
-                <a href="<?= BASEURL; ?>/car" class="btn btn-primary" style="margin-top: 10px;">
+                <a href="/car" class="btn btn-primary" style="margin-top: 10px;">
                     <i class="fas fa-car-side"></i> Mulai Sewa Sekarang
                 </a>
             </div>
@@ -152,9 +152,9 @@
             </div>
             <div class="rh-cta-button">
                 <?php if (!isset($_SESSION['user_id'])) : ?>
-                    <a href="<?= BASEURL; ?>/auth/register" class="btn btn-light btn-lg">Daftar & Sewa Sekarang</a>
+                    <a href="/register" class="btn btn-light btn-lg">Daftar & Sewa Sekarang</a>
                 <?php else : ?>
-                    <a href="<?= BASEURL; ?>/car" class="btn btn-light btn-lg">Lihat Katalog Mobil</a>
+                    <a href="/car" class="btn btn-light btn-lg">Lihat Katalog Mobil</a>
                 <?php endif; ?>
             </div>
         </div>
