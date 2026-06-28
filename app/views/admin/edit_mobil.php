@@ -7,16 +7,23 @@
         </div>
         
         <div class="card-body p-4">
-            <form action="/edit_mobil/<?= $data['mobil']['id_mobil']; ?>" method="POST" enctype="multipart/form-data">
+            <form action="/edit_mobil/<?= $data['mobil']['id_mobil']; ?>" method="POST" enctype="multipart/form-data" novalidate>
                 
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label>Merk Mobil</label>
                         <input type="text" name="merk" class="form-control" value="<?= htmlspecialchars($data['mobil']['merk']); ?>" required>
+                        <?php if (isset($data['errors']['merk'])): ?>
+                            <small class="form-error-message"><i class="fas fa-exclamation-circle"></i> <?= $data['errors']['merk']; ?></small>
+                        <?php endif; ?>
                     </div>
+                    
                     <div class="col-md-6 form-group">
                         <label>Tipe / Model</label>
                         <input type="text" name="tipe" class="form-control" value="<?= htmlspecialchars($data['mobil']['tipe']); ?>" required>
+                        <?php if (isset($data['errors']['tipe'])): ?>
+                            <small class="form-error-message"><i class="fas fa-exclamation-circle"></i> <?= $data['errors']['tipe']; ?></small>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -28,9 +35,13 @@
                             <option value="MT" <?= ($data['mobil']['transmisi'] == 'MT') ? 'selected' : ''; ?>>Manual (MT)</option>
                         </select>
                     </div>
+                    
                     <div class="col-md-6 form-group">
                         <label>Kapasitas Penumpang</label>
                         <input type="number" name="kapasitas" class="form-control" value="<?= htmlspecialchars($data['mobil']['kapasitas']); ?>" min="1" required>
+                        <?php if (isset($data['errors']['kapasitas'])): ?>
+                            <small class="form-error-message"><i class="fas fa-exclamation-circle"></i> <?= $data['errors']['kapasitas']; ?></small>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -38,7 +49,11 @@
                     <div class="col-md-6 form-group">
                         <label>Harga Sewa per Hari (Rp)</label>
                         <input type="number" name="harga_per_hari" class="form-control" value="<?= htmlspecialchars($data['mobil']['harga_per_hari']); ?>" min="1" required>
+                        <?php if (isset($data['errors']['harga_per_hari'])): ?>
+                            <small class="form-error-message"><i class="fas fa-exclamation-circle"></i> <?= $data['errors']['harga_per_hari']; ?></small>
+                        <?php endif; ?>
                     </div>
+                    
                     <div class="col-md-6 form-group">
                         <label>Status</label>
                         <select name="status" class="form-control">
@@ -58,12 +73,15 @@
                     <label>Perbarui Foto Mobil (Opsional)</label><br>
                     <?php if (!empty($data['mobil']['foto'])): ?>
                         <div class="mb-2">
-                            <img src="/public/uploads/mobil/<?= $data['mobil']['foto']; ?>" alt="Foto Lama" class="img-thumbnail" style="max-height: 100px;">
+                            <img src="<?= BASEURL; ?>/uploads/mobil/<?= $data['mobil']['foto']; ?>" alt="Foto Lama" class="img-thumbnail" style="max-height: 100px;">
                             <small class="text-muted d-block mt-1">Foto saat ini</small>
                         </div>
                     <?php endif; ?>
                     <input type="file" name="foto" class="form-control-file mt-2">
                     <small class="text-muted d-block mt-1">Biarkan kosong jika tidak ingin mengubah foto. (Maks 2MB, JPG/PNG)</small>
+                    <?php if (isset($data['errors']['foto'])): ?>
+                        <small class="form-error-message"><i class="fas fa-exclamation-circle"></i> <?= $data['errors']['foto']; ?></small>
+                    <?php endif; ?>
                 </div>
 
                 <div class="d-flex justify-content-end mt-5 pt-4 border-top">

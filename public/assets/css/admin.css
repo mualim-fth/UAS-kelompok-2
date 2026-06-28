@@ -282,3 +282,16 @@
   .list-group { margin-bottom: 20px; }
   .table thead.thead-dark th { white-space: nowrap; }
 }
+
+/* --- 7. Pesan Error Validasi Form --- */
+.form-error-message {
+  color: var(--red-600);
+  font-weight: 700;
+  display: block;
+  margin-top: 6px;
+  font-size: 0.85rem;
+}
+
+.form-error-message i {
+  margin-right: 4px;
+}
