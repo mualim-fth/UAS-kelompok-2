@@ -1,4 +1,4 @@
-<!-- Halaman riwayat booking -->
+<!-- Halaman riwayat booking | Dikerjakan oleh Anggota 2 -->
 <?php $css_halaman = 'riwayat'; include __DIR__ . '/../templates/header.php'; ?>
 
 <section class="container">
@@ -15,6 +15,7 @@
                     <th>Armada Mobil</th>
                     <th>Tanggal Sewa</th>
                     <th>Total Biaya</th>
+                    <th>Metode Bayar</th>
                     <th>Status</th>
                     <th style="text-align: center;">Aksi</th>
                 </tr>
@@ -24,11 +25,11 @@
                     <?php foreach ($data['bookings'] as $booking) : ?>
                         <tr>
                             <td><strong>#<?= $booking['id_booking']; ?></strong></td>
-                            
+
                             <td>
                                 <div class="car-info">
                                     <?php if (!empty($booking['foto'])) : ?>
-                                        <img src="<?= BASEURL; ?>/uploads/mobil/<?= $booking['foto']; ?>" alt="Mobil">
+                                        <img src="/public/uploads/mobil/<?= $booking['foto']; ?>" alt="Mobil">
                                     <?php else : ?>
                                         <div style="width: 60px; height: 40px; background: #e5e7eb; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #9ca3af;">
                                             <i class="fas fa-car"></i>
@@ -39,39 +40,56 @@
                                     </div>
                                 </div>
                             </td>
-                            
+
                             <td>
                                 <div style="font-size: 0.9rem;">
-                                    <div style="color: var(--ink);"><i class="fas fa-calendar-check text-primary" style="width: 15px;"></i> <?= date('d M Y', strtotime($booking['tanggal_ambil'])); ?></div>
+                                    <div style="color: var(--ink);"><i class="fas fa-calendar-check" style="width: 15px; color: var(--sky-500);"></i> <?= date('d M Y', strtotime($booking['tanggal_ambil'])); ?></div>
                                     <div style="color: var(--ink-soft);"><i class="fas fa-calendar-times" style="width: 15px;"></i> <?= date('d M Y', strtotime($booking['tanggal_kembali'])); ?></div>
                                 </div>
                             </td>
-                            
+
                             <td>
                                 <strong style="color: #10b981;">Rp <?= number_format($booking['total_harga'], 0, ',', '.'); ?></strong>
                             </td>
-                            
+
                             <td>
-                                <?php 
+                                <?php if (!empty($booking['metode_pembayaran'])): ?>
+                                    <span class="badge badge-secondary">
+                                        <?= htmlspecialchars($booking['metode_pembayaran']); ?>
+                                    </span>
+                                <?php else: ?>
+                                    <span style="color: var(--slate-400); font-size: 0.85rem;">-</span>
+                                <?php endif; ?>
+                            </td>
+
+                            <td>
+                                <?php
                                     $badgeClass = '';
                                     switch ($booking['status']) {
-                                        case 'Pending': $badgeClass = 'status-pending'; break;
-                                        case 'Berjalan': $badgeClass = 'status-berjalan'; break;
-                                        case 'Selesai': $badgeClass = 'status-selesai'; break;
-                                        case 'Dibatalkan': $badgeClass = 'status-batal'; break;
-                                        default: $badgeClass = 'status-pending';
+                                        case 'Pending':    $badgeClass = 'status-pending';  break;
+                                        case 'Berjalan':   $badgeClass = 'status-berjalan'; break;
+                                        case 'Selesai':    $badgeClass = 'status-selesai';  break;
+                                        case 'Dibatalkan': $badgeClass = 'status-batal';    break;
+                                        default:           $badgeClass = 'status-pending';
                                     }
                                 ?>
                                 <span class="status-badge <?= $badgeClass; ?>">
                                     <?= htmlspecialchars($booking['status']); ?>
                                 </span>
                             </td>
-                            
+
                             <td style="text-align: center;">
                                 <?php if ($booking['status'] == 'Pending') : ?>
-                                    <a href="#" class="btn btn-danger" style="padding: 6px 12px; font-size: 0.85rem;" onclick="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?');">
-                                        Batalkan
+                                    <a href="/batalkan/<?= $booking['id_booking']; ?>"
+                                       class="btn btn-danger"
+                                       style="padding: 6px 12px; font-size: 0.85rem;"
+                                       onclick="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini? Tindakan ini tidak dapat dibatalkan.');">
+                                        <i class="fas fa-times"></i> Batalkan
                                     </a>
+                                <?php elseif ($booking['status'] == 'Dibatalkan') : ?>
+                                    <span style="color: var(--red-600); font-size: 0.85rem; font-weight: 600;">
+                                        <i class="fas fa-ban"></i> Dibatalkan
+                                    </span>
                                 <?php else : ?>
                                     <span style="color: var(--ink-soft); font-size: 0.85rem;">-</span>
                                 <?php endif; ?>
@@ -80,12 +98,12 @@
                     <?php endforeach; ?>
                 <?php else : ?>
                     <tr>
-                        <td colspan="6">
+                        <td colspan="7">
                             <div class="empty-state" style="padding: 40px 20px;">
                                 <i class="fas fa-receipt"></i>
                                 <h3>Belum Ada Transaksi</h3>
                                 <p>Anda belum pernah melakukan pemesanan armada. Yuk, mulai perjalanan pertama Anda!</p>
-                                <a href="<?= BASEURL; ?>/car" class="btn btn-primary" style="margin-top: 15px;">Lihat Katalog</a>
+                                <a href="/car" class="btn btn-primary" style="margin-top: 15px;">Lihat Katalog</a>
                             </div>
                         </td>
                     </tr>
