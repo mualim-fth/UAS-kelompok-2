@@ -1,6 +1,5 @@
 <?php
 
-// Tidak ada lagi "extends Controller"
 class CarController
 {
     // =================================================================
@@ -11,13 +10,11 @@ class CarController
     {
         $data['judul'] = 'Katalog Mobil - ' . APP_NAME;
         
-        // Memanggil file Model secara manual
         require_once __DIR__ . '/../models/CarModel.php';
         $carModel = new CarModel();
         
         $data['mobil'] = $carModel->getAvailable();
 
-        // Mengirim data ke halaman view menggunakan include
         include __DIR__ . '/../views/public/katalog.php';
     }
 
@@ -48,7 +45,6 @@ class CarController
     // AREA ADMIN (Manajemen Inventaris)
     // =================================================================
 
-    // FUNGSI BARU: Ditambahkan agar rute /dashboard di index.php tidak error
     public function dashboard()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
@@ -142,9 +138,8 @@ class CarController
         }
     }
 
-public function edit($id = null)
+    public function edit($id = null)
     {
-        // Proteksi Admin
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
             header('Location: /login');
             exit;
@@ -158,14 +153,50 @@ public function edit($id = null)
         require_once __DIR__ . '/../models/CarModel.php';
         $carModel = new CarModel();
 
-        // BLOK A: JIKA ADMIN MENYIMPAN PERUBAHAN (POST)
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
-            // 1. Ambil data mobil yang lama terlebih dahulu
-            $mobilLama = $carModel->getById($id);
-            $fotoFinal = $mobilLama['foto']; // Default: gunakan foto lama
+            $errors = [];
 
-            // 2. Cek apakah admin mengunggah foto BARU
+            $merk           = trim($_POST['merk'] ?? '');
+            $tipe           = trim($_POST['tipe'] ?? '');
+            $transmisi      = $_POST['transmisi'] ?? '';
+            $kapasitas      = $_POST['kapasitas'] ?? '';
+            $harga_per_hari = $_POST['harga_per_hari'] ?? '';
+            $status         = $_POST['status'] ?? '';
+            $deskripsi      = trim($_POST['deskripsi'] ?? '');
+
+            if ($merk === '') {
+                $errors['merk'] = 'Form Merk Mobil tidak boleh kosong!';
+            }
+            if ($tipe === '') {
+                $errors['tipe'] = 'Form Tipe / Model tidak boleh kosong!';
+            }
+
+            if ($kapasitas === '') {
+                $errors['kapasitas'] = 'Form Kapasitas Penumpang tidak boleh kosong!';
+            } elseif (!is_numeric($kapasitas)) {
+                $errors['kapasitas'] = 'Form Kapasitas harus diisi dengan angka!';
+            } elseif ((int)$kapasitas < 1) {
+                $errors['kapasitas'] = 'Angka tidak boleh minus atau nol!';
+            }
+
+            if ($harga_per_hari === '') {
+                $errors['harga_per_hari'] = 'Form Harga Sewa per Hari tidak boleh kosong!';
+            } elseif (!is_numeric($harga_per_hari)) {
+                $errors['harga_per_hari'] = 'Form Harga Sewa harus diisi dengan angka!';
+            } elseif ((float)$harga_per_hari < 1) {
+                $errors['harga_per_hari'] = 'Angka tidak boleh minus atau nol!';
+            }
+
+            if (!empty($errors)) {
+                $_SESSION['errors'] = $errors;
+                header("Location: /edit_mobil/" . $id);
+                exit;
+            }
+
+            $mobilLama = $carModel->getById($id);
+            $fotoFinal = $mobilLama['foto']; 
+
             if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
                 $namaAsli   = $_FILES['foto']['name'];
                 $ukuranFile = $_FILES['foto']['size'];
@@ -176,32 +207,31 @@ public function edit($id = null)
                     $ekstensi = pathinfo($namaAsli, PATHINFO_EXTENSION);
                     $namaFileBaru = uniqid('car_') . '.' . $ekstensi;
 
-                    // Jika berhasil pindah file, ganti variabel fotoFinal dengan yang baru
                     if (move_uploaded_file($tmpName, UPLOAD_MOBIL . $namaFileBaru)) {
                         $fotoFinal = $namaFileBaru; 
                     } else {
-                        echo "<script>alert('Gagal memindahkan file gambar!'); window.history.back();</script>";
+                        $_SESSION['errors']['foto'] = 'Sistem gagal memindahkan file gambar ke server!';
+                        header("Location: /edit_mobil/" . $id);
                         exit;
                     }
                 } else {
-                    echo "<script>alert('Gagal! Format harus JPG/PNG dan maksimal 2MB.'); window.history.back();</script>";
+                    $_SESSION['errors']['foto'] = 'Format harus JPG/PNG dan ukuran maksimal 2MB!';
+                    header("Location: /edit_mobil/" . $id);
                     exit;
                 }
             }
 
-            // 3. Gabungkan seluruh data (termasuk fotoFinal yang sudah valid)
             $dataMobil = [
-                'merk'           => $_POST['merk'],
-                'tipe'           => $_POST['tipe'],
-                'transmisi'      => $_POST['transmisi'],
-                'kapasitas'      => $_POST['kapasitas'],
-                'harga_per_hari' => $_POST['harga_per_hari'],
-                'deskripsi'      => $_POST['deskripsi'] ?? null,
-                'status'         => $_POST['status'] ?? 'Tersedia',
-                'foto'           => $fotoFinal // Kunci 'foto' sekarang dipastikan selalu ada!
+                'merk'           => $merk,
+                'tipe'           => $tipe,
+                'transmisi'      => $transmisi,
+                'kapasitas'      => (int)$kapasitas,
+                'harga_per_hari' => (float)$harga_per_hari,
+                'deskripsi'      => $deskripsi ?: null,
+                'status'         => $status,
+                'foto'           => $fotoFinal 
             ];
 
-            // 4. Simpan perubahan ke database
             if ($carModel->update($id, $dataMobil)) {
                 echo "<script>alert('Data mobil berhasil diperbarui!'); window.location.href='/kelola_mobil';</script>";
             } else {
@@ -210,12 +240,14 @@ public function edit($id = null)
             exit;
         }
 
-        // BLOK B: JIKA ADMIN HANYA MEMBUKA HALAMAN (GET)
         $mobil = $carModel->getById($id);
         if (!$mobil) {
             echo "<script>alert('Data mobil tidak ditemukan!'); window.location.href='/kelola_mobil';</script>";
             exit;
         }
+
+        $data['errors'] = $_SESSION['errors'] ?? [];
+        unset($_SESSION['errors']);
 
         $data['judul'] = 'Edit Mobil - Admin';
         $data['mobil'] = $mobil;
