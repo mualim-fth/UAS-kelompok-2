@@ -9,6 +9,7 @@ define('APP_NAME', 'Rental Mobil');
 define('UPLOAD_MOBIL', __DIR__ . '/uploads/mobil/');
 define('UPLOAD_KTP_SIM', __DIR__ . '/uploads/ktp_sim/');
 define('UPLOAD_ALLOWED_TYPES', ['image/jpeg', 'image/png', 'image/jpg']);
+define('UPLOAD_BUKTI', __DIR__ . '/public/uploads/bukti/');
 define('UPLOAD_MAX_SIZE', 2097152); // 2 MB
 
 // =================================================================

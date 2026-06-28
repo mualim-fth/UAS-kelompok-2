@@ -56,51 +56,125 @@ class BookingController
     // =================================================================
     // MEMPROSES TRANSAKSI (Rumus & Insert)
     // =================================================================
-    public function proses()
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $id_mobil = $_POST['id_mobil'];
-            
-            // Panggil CarModel untuk mendapatkan harga valid dari DB
-            require_once __DIR__ . '/../models/CarModel.php';
-            $carModel = new CarModel();
-            $mobil = $carModel->getById($id_mobil);
-            
-            $dataBooking = [
-                'id_user'          => $_SESSION['user_id'],
-                'id_mobil'         => $id_mobil,
-                'tanggal_ambil'    => $_POST['tanggal_ambil'],
-                'tanggal_kembali'  => $_POST['tanggal_kembali'],
-                'opsi_pengambilan' => $_POST['opsi_pengambilan'],
-                'catatan'          => $_POST['catatan'] ?? null,
-                'harga_per_hari'   => $mobil['harga_per_hari'] 
-            ];
+    // Di dalam BookingController::proses()
 
-            // Validasi Logika Kalender
-            $waktuAmbil   = strtotime($dataBooking['tanggal_ambil']);
-            $waktuKembali = strtotime($dataBooking['tanggal_kembali']);
-            
-            if ($waktuAmbil < strtotime(date('Y-m-d')) || $waktuKembali <= $waktuAmbil) {
-                echo "<script>alert('Error: Rentang tanggal sewa tidak valid!'); window.history.back();</script>";
-                exit;
-            }
+public function proses()
+{
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $id_mobil = $_POST['id_mobil'] ?? null;
 
-            // Eksekusi insert ke database dengan BookingModel
-            require_once __DIR__ . '/../models/BookingModel.php';
-            $bookingModel = new BookingModel();
-            $id_booking = $bookingModel->create($dataBooking);
-
-            if ($id_booking) {
-                // Ubah status mobil menjadi 'Disewa'
-                $carModel->updateStatus($id_mobil, 'Disewa');
-                
-                echo "<script>alert('Transaksi berhasil dikirim! Silakan pantau status pesanan Anda.'); window.location.href='/riwayat';</script>";
-            } else {
-                echo "<script>alert('Sistem gagal memproses pesanan Anda.'); window.history.back();</script>";
-            }
+        if (!$id_mobil) {
+            echo "<script>alert('ID mobil tidak ditemukan!'); window.history.back();</script>";
             exit;
         }
+
+        // Ambil data mobil
+        require_once __DIR__ . '/../models/CarModel.php';
+        $carModel = new CarModel();
+        $mobil = $carModel->getById($id_mobil);
+
+        if (!$mobil || $mobil['status'] !== 'Tersedia') {
+            echo "<script>alert('Mobil tidak tersedia!'); window.location.href='/car';</script>";
+            exit;
+        }
+
+        // ==========================================
+        // VALIDASI TANGGAL
+        // ==========================================
+        $tanggal_ambil   = $_POST['tanggal_ambil'] ?? '';
+        $tanggal_kembali = $_POST['tanggal_kembali'] ?? '';
+
+        if (empty($tanggal_ambil) || empty($tanggal_kembali)) {
+            echo "<script>alert('Tanggal harus diisi!'); window.history.back();</script>";
+            exit;
+        }
+
+        $waktuAmbil   = strtotime($tanggal_ambil);
+        $waktuKembali = strtotime($tanggal_kembali);
+
+        if ($waktuAmbil < strtotime(date('Y-m-d')) || $waktuKembali <= $waktuAmbil) {
+            echo "<script>alert('Rentang tanggal tidak valid!'); window.history.back();</script>";
+            exit;
+        }
+
+        // ==========================================
+        // VALIDASI METODE PEMBAYARAN
+        // ==========================================
+        if (empty($_POST['metode_pembayaran'])) {
+            echo "<script>alert('Metode pembayaran wajib dipilih!'); window.history.back();</script>";
+            exit;
+        }
+
+        $metode_pembayaran = $_POST['metode_pembayaran'];
+        $bukti_file = null;
+
+        // ==========================================
+        // UPLOAD BUKTI (jika bukan COD)
+        // ==========================================
+        if ($metode_pembayaran != 'COD') {
+            // Buat folder jika belum ada
+            if (!is_dir(UPLOAD_BUKTI)) {
+                mkdir(UPLOAD_BUKTI, 0777, true);
+            }
+
+            if (isset($_FILES['bukti_transfer']) && $_FILES['bukti_transfer']['error'] === UPLOAD_ERR_OK) {
+                $allowed = ['image/jpeg', 'image/png', 'image/jpg'];
+                $fileType = mime_content_type($_FILES['bukti_transfer']['tmp_name']);
+                $fileSize = $_FILES['bukti_transfer']['size'];
+
+                if (!in_array($fileType, $allowed) || $fileSize > UPLOAD_MAX_SIZE) {
+                    echo "<script>alert('Format/ukuran file bukti tidak valid!'); window.history.back();</script>";
+                    exit;
+                }
+
+                $ext = pathinfo($_FILES['bukti_transfer']['name'], PATHINFO_EXTENSION);
+                $bukti_file = 'bukti_' . time() . '_' . uniqid() . '.' . $ext;
+                $target_path = UPLOAD_BUKTI . $bukti_file;
+
+                if (!move_uploaded_file($_FILES['bukti_transfer']['tmp_name'], $target_path)) {
+                    echo "<script>alert('Gagal mengunggah bukti pembayaran!'); window.history.back();</script>";
+                    exit;
+                }
+            } else {
+                echo "<script>alert('Bukti pembayaran wajib diunggah!'); window.history.back();</script>";
+                exit;
+            }
+        }
+
+        // ==========================================
+        // SIAPKAN DATA BOOKING (DEFINISIKAN DI SINI)
+        // ==========================================
+        $dataBooking = [
+            'id_user'          => $_SESSION['user_id'],
+            'id_mobil'         => $id_mobil,
+            'tanggal_ambil'    => $tanggal_ambil,
+            'tanggal_kembali'  => $tanggal_kembali,
+            'opsi_pengambilan' => $_POST['opsi_pengambilan'] ?? 'Ambil di Garasi',
+            'catatan'          => $_POST['catatan'] ?? null,
+            'harga_per_hari'   => $mobil['harga_per_hari']
+        ];
+
+        // ==========================================
+        // SIMPAN KE DATABASE
+        // ==========================================
+        require_once __DIR__ . '/../models/BookingModel.php';
+        $bookingModel = new BookingModel();
+        $id_booking = $bookingModel->create($dataBooking);
+
+        if ($id_booking) {
+            // Simpan pembayaran
+            $bookingModel->savePayment($id_booking, $metode_pembayaran, $bukti_file);
+
+            // Update status mobil
+            $carModel->updateStatus($id_mobil, 'Disewa');
+
+            echo "<script>alert('Transaksi berhasil!'); window.location.href='/riwayat';</script>";
+        } else {
+            echo "<script>alert('Gagal memproses pesanan.'); window.history.back();</script>";
+        }
+        exit;
     }
+}
 
     // =================================================================
     // HALAMAN RIWAYAT PESANAN CUSTOMER
