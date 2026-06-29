@@ -56,6 +56,7 @@
                                                 </span>
                                             </td>
                                             <td class="text-center">
+                                                <a href="/detail/<?= $mobil['id_mobil']; ?>" target="_blank" class="btn btn-sm btn-secondary">Detail</a>
                                                 <a href="/edit_mobil/<?= $mobil['id_mobil']; ?>" class="btn btn-sm btn-warning">Edit</a>
                                                 <a href="/hapus_mobil/<?= $mobil['id_mobil']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus mobil ini?');">Hapus</a>
                                             </td>
