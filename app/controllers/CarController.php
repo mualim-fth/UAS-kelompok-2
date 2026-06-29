@@ -52,7 +52,38 @@ class CarController
             exit;
         }
 
-        $data['judul'] = 'Dashboard Admin - ' . APP_NAME;
+        require_once __DIR__ . '/../models/CarModel.php';
+        require_once __DIR__ . '/../models/BookingModel.php';
+        require_once __DIR__ . '/../models/UserModel.php';
+
+        $carModel = new CarModel();
+        $bookingModel = new BookingModel();
+        $userModel = new UserModel();
+
+        $semuaMobil = $carModel->getAll();
+        $total_mobil = count($semuaMobil);
+
+        $semuaBooking = $bookingModel->getAll();
+        $total_pending = 0;
+        foreach ($semuaBooking as $booking) {
+            if ($booking['status'] === 'Pending') {
+                $total_pending++;
+            }
+        }
+
+        $semuaUser = $userModel->getAll();
+        $total_users = 0;
+        foreach ($semuaUser as $user) {
+            if ($user['role'] === 'customer') {
+                $total_users++;
+            }
+        }
+
+        $data['judul']         = 'Dashboard Admin - ' . APP_NAME;
+        $data['total_mobil']   = $total_mobil;
+        $data['total_pending'] = $total_pending;
+        $data['total_users']   = $total_users;
+
         include __DIR__ . '/../views/admin/dashboard.php';
     }
 
