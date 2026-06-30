@@ -12,86 +12,88 @@ class UserModel
 
     public function getAll(): array
     {
-        return $this->db->query("SELECT * FROM users ORDER BY created_at DESC")
-                        ->fetchAll();
+        $stmt = $this->db->prepare("SELECT * FROM users ORDER BY created_at DESC");
+        $stmt->execute();
+        return $stmt->fetchAll();
     }
 
     public function getById(int $id): array|false
     {
-        return $this->db->query(
-            "SELECT * FROM users WHERE id_user = ?", [$id]
-        )->fetch();
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE id_user = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch();
     }
 
     public function getByEmail(string $email): array|false
     {
-        return $this->db->query(
-            "SELECT * FROM users WHERE email = ?", [$email]
-        )->fetch();
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        return $stmt->fetch();
     }
 
     public function emailExists(string $email): bool
     {
-        $row = $this->db->query(
-            "SELECT id_user FROM users WHERE email = ?", [$email]
-        )->fetch();
+        $stmt = $this->db->prepare("SELECT id_user FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        $row = $stmt->fetch();
         return $row !== false;
     }
 
     public function create(array $data): bool
     {
-        $this->db->query(
+        $stmt = $this->db->prepare(
             "INSERT INTO users (nama_lengkap, email, password, nomor_hp, alamat, role)
-             VALUES (?, ?, ?, ?, ?, ?)",
-            [
-                $data['nama_lengkap'],
-                $data['email'],
-                password_hash($data['password'], PASSWORD_BCRYPT),
-                $data['nomor_hp']  ?? null,
-                $data['alamat']    ?? null,
-                $data['role']      ?? 'customer',
-            ]
+             VALUES (?, ?, ?, ?, ?, ?)"
         );
+        
+        $stmt->execute([
+            $data['nama_lengkap'],
+            $data['email'],
+            password_hash($data['password'], PASSWORD_BCRYPT),
+            $data['nomor_hp']  ?? null,
+            $data['alamat']    ?? null,
+            $data['role']      ?? 'customer'
+        ]);
+        
         return true;
     }
 
     public function update(int $id, array $data): bool
     {
-        $this->db->query(
+        $stmt = $this->db->prepare(
             "UPDATE users
              SET nama_lengkap = ?, nomor_hp = ?, alamat = ?
-             WHERE id_user = ?",
-            [
-                $data['nama_lengkap'],
-                $data['nomor_hp'] ?? null,
-                $data['alamat']   ?? null,
-                $id,
-            ]
+             WHERE id_user = ?"
         );
+        
+        $stmt->execute([
+            $data['nama_lengkap'],
+            $data['nomor_hp'] ?? null,
+            $data['alamat']   ?? null,
+            $id
+        ]);
+        
         return true;
     }
 
     public function updateFotoKtp(int $id, string $path): bool
     {
-        $this->db->query(
-            "UPDATE users SET foto_ktp = ? WHERE id_user = ?",
-            [$path, $id]
-        );
+        $stmt = $this->db->prepare("UPDATE users SET foto_ktp = ? WHERE id_user = ?");
+        $stmt->execute([$path, $id]);
         return true;
     }
 
     public function updateFotoSim(int $id, string $path): bool
     {
-        $this->db->query(
-            "UPDATE users SET foto_sim = ? WHERE id_user = ?",
-            [$path, $id]
-        );
+        $stmt = $this->db->prepare("UPDATE users SET foto_sim = ? WHERE id_user = ?");
+        $stmt->execute([$path, $id]);
         return true;
     }
 
     public function delete(int $id): bool
     {
-        $this->db->query("DELETE FROM users WHERE id_user = ?", [$id]);
+        $stmt = $this->db->prepare("DELETE FROM users WHERE id_user = ?");
+        $stmt->execute([$id]);
         return true;
     }
 
